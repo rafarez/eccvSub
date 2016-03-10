@@ -21,12 +21,12 @@ Equation (\ref{eq:kernel}) can be rewritten as
 where $\varphi$ is the {\em feature map} over $X$ associated with the
 kernel $k$ (which may not admit a known explicit form) and $\langle \cdot, \cdot \rangle$ is the inner product of $H$. We dub problems with the general form of (\ref{ker:aff}) {\em affine}
 supervised learning problems since, given some fixed element $h$ of
-$H$ and some scalar $\nu$, $\langle h,h'\rangle+b$ is an affine function of $h'$,
+$H$ and some scalar $\nu$, $\langle h,h'\rangle+\nu$ is an affine function of $h'$,
 whose zero set defines an affine hyperplane of $H$ considered itself
 as an affine space.
 
 Let $K$ denote the kernel matrix with entries $k_{ij}=\langle\varphi(x_i),
-\varphi(x_j)\rangle$ and rows $k_i^T=[k_{i1}, k_{i2},...,k_{in}]$, $i$ in $\{1,\ldots,n\}$.  We assume from now on that $l$ is convex and continuous. under this assumption, Equation (\ref{ker:aff}) admits an equivalent version
+\varphi(x_j)\rangle$ and rows $k_i^T=[k_{i1}, k_{i2},...,k_{in}]$, $i$ in $\{1,\ldots,n\}$.  We assume from now on that $l$ is convex and continuous. Under this assumption, Equation (\ref{ker:aff}) admits an equivalent formulation
 \begin{align}
 \min_{\alpha\in\RR^{n}, \ \nu\in\RR} \left(\dfrac{1}{n}\sumi l(y_i, k_i^T\alpha+\nu)  +\dfrac{\lambda}{2}\alpha^TK\alpha\right), \label{ker:first}
 \end{align}
@@ -58,7 +58,7 @@ k_{00} & k_0^T\\
 k_0 & K
 \end{bmatrix},
 \end{equation}
-where $k_{00}=\langle \varphi(x_0),\varphi(x_0)\rangle$ is a scalar and $k_0= [\langle \varphi(x_0),\varphi(x_0)\rangle]_{1\le i\le n}$ is a vector in $\RR^n$. 
+where $k_{00}=\langle \varphi(x_0),\varphi(x_0)\rangle$ is a scalar and $k_0= [\langle \varphi(x_0),\varphi(x_i)\rangle]_{1\le i\le n}$ \JZ{Changed from $x_0$ to $x_i$} is a vector in $\RR^n$. 
 The following lemma show that an $(n+1)\times (r+1)$ factorization of $K'$ can be computed as well.
 
 \begin{figure}[!h]
@@ -118,3 +118,7 @@ Inspired by the matching score of \cite{ZePe15}, the matching score $s(h,h')$ of
 \end{align}
 
 
+
+%%% Local Variables:
+%%% TeX-master: "main_eccv"
+%%% End:

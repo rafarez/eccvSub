@@ -17,11 +17,23 @@
 \newcommand{\RR}{\mathbb R}
 \newcommand{\NNN}{\mathcal N}
 \newcommand{\sumi}{\displaystyle{\sum_{i=1}^n}}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% Highlighting
+\usepackage{soul}
+\usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\newcommand{\hlc}[2][yellow]{{\sethlcolor{#1}\hl{#2}}}
+\newcommand{\PP}[1]{\hlc[yellow]{(RR:) #1}}
+\newcommand{\JZ}[1]{\hlc[pink]{(JZ:) #1}}
+\newcommand{\PP}[1]{\hlc[green]{(PP:) #1}}
 
 \begin{document}
 % \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
 % \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}}
 % \linenumbers
+
+
 \pagestyle{headings}
 \mainmatter
 \def\ECCV16SubNumber{***}  % Insert your submission number here
@@ -41,8 +53,8 @@
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-   In this paper, we propose an improvement to the pipeline of the feature encoder based on the exemplar SVM, first proposed by Zepeda et al.
-   First we show that by replacing the hinge loss by the square-loss in the cost function of an Exemplar SVM we obtain similar results on image retrieval in a fraction of the execution time. We call this method Square-loss Exemplar Machine, or SLEM.
+   In this paper, we propose an improvement to the Exemplar SVM (ESVM) feature encoding pipeline first proposed by Zepeda and P\'erez \cite{ZepPe15}.
+   We first show that, by replacing the hinge loss by the square-loss in the ESVM cost function, we obtain similar results on image retrieval in a fraction of the execution time. We call this method Square-Loss Exemplar Machine, or SLEM.
    Secondly, we introduce a efficient kernel implementation for SLEM. This implementation scales well for image
 \end{abstract}
 
