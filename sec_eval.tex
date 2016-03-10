@@ -1,4 +1,7 @@
 \section{Experimental Evaluation}
+
+\JZ{Having results using a recursive variant of SLEM would be interesting. Classificaiton results using $K$-NN or Nearest Class Mean (NCM) classifiers (or SVMs) would be interesting too, as done in the E-SVM paper.}
+
 \subsection{Datasets and evaluation protocol} \label{eval:protocol}
 Our default dataset in this paper will be INRIA \emph{Holidays} dataset \cite{holidays}. This dataset consists of 1491 images divided in 500 groups of matching images. For the remaining of this report, if the dataset of an experiment is not mentioned, the experiment is performed on \emph{Holidays}.
 We also perform in the \emph{Oxford} dataset \cite{oxford}, which consists of 5062 images separated in 55 groups of matching images.
@@ -70,7 +73,7 @@ Intersection SLEM   & -    & 42.2 & - & -    & - \\
 \begin{subfigure}[b]{0.48\textwidth}
 \includegraphics[width=\textwidth]{rbf_decomposition_nolog.png}
 \end{subfigure}
-\caption{At the left, comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. At the right, comparision between the gaussian kernel results and its low-rank decomposition results. In blue, mAP of the full-rank Gaussian SLEM. In red, mAP for different low-rank decomposition of Gaussian SLEM. In this experiment, $r=10281$.}
+\caption{At the left, comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. At the right, comparision between the Gaussian kernel results and its low-rank decomposition results. In blue, mAP of the full-rank Gaussian SLEM. In red, mAP for different low-rank decomposition of Gaussian SLEM. In this experiment, $r=10281$.}
 \label{no.ker.vs.linear2}
 \end{figure}
 
@@ -83,7 +86,7 @@ Intersection SLEM   & -    & 42.2 & - & -    & - \\
 \begin{subfigure}[b]{0.48\textwidth}
 \includegraphics[width=\textwidth]{speed_n_15K.png}
 \end{subfigure}
-\caption{Comparison between time calculation of similarity matrix $S$, as defined in \ref{eval:protocol}, for different methods.}
+\caption{Comparison between time calculation of similarity matrix $S$, as defined in \ref{eval:protocol}, for different methods. \JZ{Not too sure what this is... Does it include the feature computation time for all positives/negatives? If so, then why call it \emph{time calculation of similarity matrix}? Or is it just the score computation, in which case, shouldn't the complexity be the same for SLEM and E-SVM?}}
 \label{time:scalar}
 \end{figure}
 
@@ -92,3 +95,6 @@ Intersection SLEM   & -    & 42.2 & - & -    & - \\
 %\caption{Comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. }
 
 
+%%% Local Variables:
+%%% TeX-master: "main_eccv"
+%%% End:

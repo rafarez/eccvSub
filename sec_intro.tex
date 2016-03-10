@@ -1,20 +1,59 @@
 \section{Introduction}
-The exemplar SVM (E-SVM) was first introduced by Malisiewicz et al. in \cite{Efros11} as a conceptually simple framework for object detection and image classification where the training set has a small ratio of positive/negative examples. 
-At training time, many SVMs are learned from a large pool of negative against a single positive (so called exemplar). 
-At test time, the scores of the test images for each classifier are fitted by a logistic regression. 
-The final score of an image is then a non-linear combination of scores from multiples exemplar SVMs.
 
-They have also been used in \cite{Efros12} in image retrieval tasks, using the classifier score to rank matching candidates.
-However this transfer of information from classification to retrieval is severely limited. 
-Indeed, the purpose of a support vector machine is to separate positive and negative samples, i.e., predict discrete labels. 
-The distance between a negative sample and the classification hyperplane has no value as a measure of has \emph{a priori} no value of continuous matching score.
+Robust image representations are a crucial component of a vast number of computer vision applications. Within these, the \emph{image retrieval} application is an important example wherein a query image is provided to the system, which must in turn find all matching images from within a large, unannotated database. The matching process is done entirely based on the pixel content of the query and database images, and the search must be robust to large image variations in camera pose, color and scene illumination, amongst others.
 
-Zepeda et al. address this problem in \cite{ZePe15} by firstly, performing an E-SVM to each image in a dataset instead of only for the query images and secondly, comparing its classifiers distance to the query's classifier instead of comparing scores. 
-These modifications guarantee we are ranking distances between two points instead of classification scores.
-Therefore \cite{ZePe15} refers to E-SVMs as features encoders: a pipeline that takes an image representation as input and returns an improved image representation. This type of feature enhancing is more akin to methods such as whitening, PCA and LDA.
+The success of several existing systems in this challenging application has indeed been enabled by advances in  image representation functions. An image representation function commonly maps a given input image to a vector in a fixed dimensional space called the image \emph{feature vector}. The image retrieval process then reduces to finding the feature vectors closest to the query image feature vector under {\it e.g.,} the Euclidean distance. An adequate image representation function must hence produce feature vectors that are robust to image variations, while at the same time incurring low computational overhead.
 
-This paper introduces the square-loss Exemplar machine (SLEM), which consists of optimizing the same cost function of a regular E-SVM where the hinge loss is replaced by the square loss. 
-The square loss version has the advantage of having a much more efficient optimization. Indeed, the minimization of its cost function is solved by a linear system and can be done for all exemplar simultaneously, whereas the regular E-SVM cost function is generally minimized one exemplar at a time, normally by stochastic gradient descent \cite{bottou10}.
-Also, for the machine learning tasks of binary classification, both regular SVM and least-squares SVM have similar performances \cite{YeXi07}.
-%Also, for the machine learning tasks of binary classification, both regular SVM and least-squares SVM have the same performance if positive and negative samples are separable and the pool of samples is linearly independent \cite{YeXi07}. 
-We also introduce a kernelized version of SLEM, efficiently implemented, that gives better results and superior scalability for large-scale image retrieval problems.
+A now pervasive example of an image feature representation is that consisting of the activation coefficients extracted from the previous-to-last layer of Convolutional Neural Networks (CNNs) \cite{}. Although CNNs are trained in a fully-supervised manner for the image classification task, they have been shown to transfer well not only to new, unseen classes \cite{Oquab,Kulkarni,ChatfieldDevil}, but also to alternate tasks such as object detection \cite{RCNN} and, importantly, image retrieval \cite{AstoundingBaseline}.
+
+Yet the more successful current feature representations for image retrieval rely on generative models such as $K$-means \cite{VLAD} or Gaussian Mixture Models \cite{Fisher}. Very few methods \cite{NetVLAD,Aakanksha,Cagdas} exist that exploit supervised learning of image features directly for the image retrieval task. One of the main reasons for this is the lack of adequately large and varied supervised datasets that are expensive to collect \cite{NetVLAD}.
+
+The Exemplar Support Vector Machine (E-SVM) formulation originally proposed by Malisiewicz {\it et al.} \cite{Malisiewicz} is a way to leverage the availability of large, unannotated pools of images within the context of supervised learning. The approach consists of using a large generic pool as a set of negative examples, while using a single image (the \emph{exemplar}) as a positive example. Given these training set, a linear classifier is learned that can  generalize well, despite the drastically limited size of the set of positive examples. 
+
+An extension \cite{ZePe15} of the E-SVM formulation discussed above instead treats the resulting linear classifier as an \emph{enhanced} representation of the image feature representing the exemplar image. Enhanced representations can thus be extracted from each database image, as well as from the query image, by treating each image as an exemplar while keeping a fixed pool of generic negative images. Searching hence amounts to computing distances between these new, enhanced E-SVM features. An interesting aspect of this approach is that the enhanced representation extracts what is unique about the exemplar relative to the pool of generic negatives.
+
+
+
+Image search
+- Importance.
+- Feature representations. 
+
+Feature representation - supervised learning
+- Generic framework.
+- Deep CNN features.
+- ImageNet.
+
+Image retrieval
+- Supervised - Eusipco, NetVLAD.
+- VLAD, Fisher.
+- Cheaper.
+
+Pool:
+LDA
+SVMs for feature representations - parts learning, Malizsiewics
+
+
+%\section {Introduction}
+% The exemplar SVM (E-SVM) was first introduced by Malisiewicz et al. in \cite{Efros11} as a conceptually simple framework for object detection and image classification where the training set has a small ratio of positive/negative examples. 
+% At training time, many SVMs are learned from a large pool of negative against a single positive (so called exemplar). 
+% At test time, the scores of the test images for each classifier are fitted by a logistic regression. 
+% The final score of an image is then a non-linear combination of scores from multiples exemplar SVMs.
+
+% They have also been used in \cite{Efros12} in image retrieval tasks, using the classifier score to rank matching candidates.
+% However this transfer of information from classification to retrieval is severely limited. 
+% Indeed, the purpose of a support vector machine is to separate positive and negative samples, i.e., predict discrete labels. 
+% The distance between a negative sample and the classification hyperplane has no value as a measure of has \emph{a priori} no value of continuous matching score.
+
+% Zepeda et al. address this problem in \cite{ZePe15} by firstly, performing an E-SVM to each image in a dataset instead of only for the query images and secondly, comparing its classifiers distance to the query's classifier instead of comparing scores. 
+% These modifications guarantee we are ranking distances between two points instead of classification scores.
+% Therefore \cite{ZePe15} refers to E-SVMs as features encoders: a pipeline that takes an image representation as input and returns an improved image representation. This type of feature enhancing is more akin to methods such as whitening, PCA and LDA.
+
+% This paper introduces the square-loss Exemplar machine (SLEM), which consists of optimizing the same cost function of a regular E-SVM where the hinge loss is replaced by the square loss. 
+% The square loss version has the advantage of having a much more efficient optimization. Indeed, the minimization of its cost function is solved by a linear system and can be done for all exemplar simultaneously, whereas the regular E-SVM cost function is generally minimized one exemplar at a time, normally by stochastic gradient descent \cite{bottou10}.
+% Also, for the machine learning tasks of binary classification, both regular SVM and least-squares SVM have similar performances \cite{YeXi07}.
+% %Also, for the machine learning tasks of binary classification, both regular SVM and least-squares SVM have the same performance if positive and negative samples are separable and the pool of samples is linearly independent \cite{YeXi07}. 
+% We also introduce a kernelized version of SLEM, efficiently implemented, that gives better results and superior scalability for large-scale image retrieval problems.
+
+%%% Local Variables:
+%%% TeX-master: "main_eccv"
+%%% End:

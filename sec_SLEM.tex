@@ -3,7 +3,7 @@ In this section, we revisit the exemplar SVM model as presented by \cite{Efros11
 \subsection{Exemplar SVMs} \label{esvm}
 Given features in $\RR^d$ at training time, one positive example $x_0$ in $_RR^d$ and a set of negative examples $X = [x_1, x_2,...,x_n]$, in $\RR^{d\times n}$each column of $X$ representing one example by a vector in $\RR^d$. 
 Any feature vector representation can be used.
-We are also given a loss function $l:\{-1, 1\}\times \RR\rightarrow\RR^+$. Learning an E-SVM from these examples amounts to minimizing the function
+We are also given a loss function $l:\{-1, 1\}\times \RR\rightarrow\RR^+$. Learning an E-SVM from these examples amounts to minimizing the function 
 \begin{equation}
 J(\omega, \nu) = \theta \ l(1, \omega^Tx_0+\nu) +\dfrac{1}{n}\sumi l(-1, \omega^T x_i+\nu)+\dfrac{\lambda}{2}|\!|\omega|\!|^2, \label{eq:first}
 \end{equation}
@@ -14,27 +14,27 @@ In Equation (\ref{eq:first}), $\lambda$ and $\theta$ are respectively a regulari
 
 The  exemplar SVM of $x_0$ with respect to $\NNN$ is the classifier $\omega^\star$ that minimizes the function $J$:
 \begin{equation}
-\omega^\star(x_0, X), \nu^\star(x_0, X) = \underset{\omega\in\RR^d, \ \nu\in\RR}{argmin} \ J(\omega, \nu). \label{omega:first}
+\omega^\star(x_0, X), \nu^\star(x_0, X) = \underset{\omega\in\RR^d, \ \nu\in\RR}{\argmin} \ J(\omega, \nu). \label{omega:first}
 \end{equation}
 To shorten the notation, we refer to these solutions as $\omega^\star$ and $\nu^\star$ when their arguments are implicit.\\
 Applications of E-SVM use the hinge loss function, which guarantees that $J$ is a convex function. The solution of Equation (\ref{omega:first}) can be thus found by stochastic gradient descent.
 
 \subsection{Square loss function}\label{SLEM}
 Now, let us study the same learning problem for the square-loss function $l(y,\hat{y}) = \frac{1}{2}(y-\hat{y})^2$. As for the hinge loss, Equation (\ref{eq:first}) is a convex problem. 
-However, differently from the hinge loss, Equation (\ref{eq:first}) is a ridgr regression problem, whose solution is expressed in a close form:
+However, differently from the hinge loss, Equation (\ref{eq:first}) is a ridge regression problem, whose solution is expressed in a close form:
 
 \begin{align}
 \begin{cases}
 \vspace{3 mm}
 \nu^\star &= \dfrac{\theta-1}{\theta+1}-\dfrac{1}{\theta+1}(\theta x_0+\mu)^T\omega^\star,\\
 \vspace{3 mm}
-\omega^\star &= \dfrac{2\theta}{\theta+1}U^{-1}(x_0-\mu), \ where \\
+\omega^\star &= \dfrac{2\theta}{\theta+1}U^{-1}(x_0-\mu), \\
 \end{cases}
 \label{omega:solution}
 \end{align}
 
 \begin{align}
-where \ \mu = \frac{1}{n}\sum_{i=1}^n x_i, \ \ U = \dfrac{1}{n}XX^T-\mu\mu^T+\dfrac{\theta}{\theta+1}(x_0-\mu)(x_0-\mu)^T+\lambda\textbf{Id}_d.
+\textrm{ where } \mu = \frac{1}{n}\sum_{i=1}^n x_i, \ \ U = \dfrac{1}{n}XX^T-\mu\mu^T+\dfrac{\theta}{\theta+1}(x_0-\mu)(x_0-\mu)^T+\lambda\textbf{Id}_d.
 \end{align}
 Equation (\ref{omega:solution}) shows how to solve (\ref{eq:first}) in a closed form to obtain the SLEM vector $\omega^\star(x_0,X)$ of $x_0$. 
 Replacing the hinge loss by the square loss offers a more compact solution, but not necessarily more efficient.
@@ -96,3 +96,9 @@ regularizer parameter $\lambda $ is zero.
 This observation has been equally made by \cite{Koba15}.
 
 Many interesting properties of LDA has been rediscovered classification tasks \cite{GMPD12,HMR12} and, more recently, for image retrieval with non-embedded image encoders \cite{babenko15}.
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main_eccv"
+%%% End:
