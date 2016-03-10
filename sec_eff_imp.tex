@@ -26,7 +26,7 @@ B(J_t, t) = \frac{1}{B(i_t,t)}(K(J_t,i_t)\\
 \end{align}
 The time complexity of the $t$-th interaction is $O(tn)$, thus making the full algorithm $O(nr^2)$ in time. Since $B$ is $n\times r$, storage complexity is $O(nr)$. In particular, \cite{BaJo05} shows us that, for $t$ in $\{1,2,...,r\}$, the error matrix $K-B_tB_t^T$ is a $(n-t)\times (n-t)$ block matrix which is the Schur complement of $K(I_t,I_t)$ in $K$ and zero elsewhere.
 
-For many kernels such as the Gaussian, $K$ can be a full rank matrix. Its Cholesky decomposition is hence a $O(n^3)$ operation in time, which is a prohibitive cost for large negative sets $X$. We propose stoping the algorithm described in (\ref{icd:algo}) after a given number $r'<r$ of steps, and use $B_{r'}$ as an approximation of $B$. We also need to know only the $r'$ first pivots, which we call $I$ from now on. Conversely, we note $J=J_{r'}$. The construction of $B'$ from $B_{r'}$ can be adapted as presented in the following lemma:
+For many kernels such as the Gaussian, $K$ can be a full rank matrix. Its Cholesky decomposition is hence a $O(n^3)$ operation in time, which is a prohibitive cost for large negative sets $X$. We propose stopping the algorithm described in (\ref{icd:algo}) after a given number $r'<r$ of steps, and use $B_{r'}$ as an approximation of $B$. We also need to know only the $r'$ first pivots, which we call $I$ from now on. Conversely, we note $J=J_{r'}$. The construction of $B'$ from $B_{r'}$ can be adapted as presented in the following lemma:
 %\begin{proposition}
 %There is an unique $n\times n$ matrix $L$ such that
 %\begin{itemize}

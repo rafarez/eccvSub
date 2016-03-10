@@ -53,12 +53,12 @@ Let us also assume its factorization $K=BB^T$ and its pseudoinverse $B^\dagger$ 
 
 We denote $K'$ the augmented kernel matrix obtained by adding the positive samples $x_0$. Such matrix can be written as
 \begin{equation}
-K = \begin{bmatrix}
+K' = \begin{bmatrix}
 k_{00} & k_0^T\\
 k_0 & K
 \end{bmatrix},
 \end{equation}
-where $k_{00}=\langle \varphi(x_0),\varphi(x_0)\rangle$ is a scalar and $k_0= [\langle \varphi(x_0),\varphi(x_i)\rangle]_{1\le i\le n}$ \JZ{Changed from $x_0$ to $x_i$} is a vector in $\RR^n$. 
+where $k_{00}=\langle \varphi(x_0),\varphi(x_0)\rangle$ is a scalar and $k_0= [\langle \varphi(x_0),\varphi(x_i)\rangle]_{1\le i\le n}$ is a vector in $\RR^n$. 
 The following lemma show that an $(n+1)\times (r+1)$ factorization of $K'$ can be computed as well.
 
 \begin{figure}[!h]
