@@ -8,16 +8,16 @@ $X$, and denote by $k$ the corresponding reproducing kernel.  We
 address the following learning problem over $H\times\RR$:
 \begin{equation}
 \min_{h\in H,\nu\in\RR}
-\sum_{i=1}^n l(y_i,h(x_i)+\nu) + \frac{\lambda}{2}|\! |h|\!|^2,
+\sum_{i=1}^n l(y_i,h(x_i)+\nu) + \frac{\lambda}{2}\|h\|_H^2,
 \label{eq:kernel}
 \end{equation}  
-where the pairs $(x_i,y_i)$, $i$ in $\{1,\ldots,n\}$ in $X\times \{-1,1\}$ are training samples, and $l: \{-1,1\}\times \RR\rightarrow\RR^+$ is some arbitrary loss function. 
+where the pairs $(x_i,y_i)\in X\times \{-1,1\}$, $i=1\dots n$ are training samples, and $l: \{-1,1\}\times \RR\rightarrow\RR^+$ is some arbitrary loss function. 
 By definition of a reproducing kernel,
 Equation (\ref{eq:kernel}) can be rewritten as
 \begin{equation}
 \min_{h\in H,\nu\in\RR}
 \sum_{i=1}^n l(y_i,\langle \varphi(x_i),h\rangle+\nu) +
-\dfrac{\lambda}{2}|\!|h|\!|^2,
+\dfrac{\lambda}{2}\|h\|_H^2,
 \label{ker:aff}
 \end{equation} 
 where $\varphi$ is the {\em feature map} over $X$ associated with the
@@ -43,15 +43,15 @@ $h^\star=\sum_{i=1}^n \alpha_i^\star\varphi(x_i)+\nu^\star$. This result follows
 
 Let us assume from now on that $K$ is a semidefinite positive matrix
 %\footnote{\textit{i.e.} for any $z$ in $\RR^n$, $z^TKz\ge 0$. This is equivalent to all eigenvalues of $K$ being non-negative.} 
-of rank $r$. If $B$ is the $n\times r$ incomplete Cholesky decomposition of $K$, \textit{i.e.} $K=BB^T$. The kernelized problem can be thus rewritten as 
+of rank $r$. Its Cholesky decomposition reads $K=BB^T$, with $B$ a rank $r$ upper triangular matrix of size $n\times r$. Using this decomposition, the kernelized problem can be rewritten as 
 \begin{equation}
-\min_{\beta\in\RR^r,\nu\in\RR} \left( \dfrac{1}{n}\sumi l(y_i, b_i^T\beta+\nu)+\dfrac{\lambda}{2}|\!|\beta|\!|^2\right), \label{beta:first}
+\min_{\beta\in\RR^r,\nu\in\RR} \left( \dfrac{1}{n}\sumi l(y_i, b_i^T\beta+\nu)+\dfrac{\lambda}{2}\|\beta\|^2\right), \label{beta:first}
 \end{equation}
 where $b_i^T$ denotes the $i$-th row of $B$.
 
 \subsection{Adding a positive exemplar}
 Let us reconsider the exemplar problem, with one positive example $x_0$ and $n$ negative examples $X$. Here $K$ is the kernel matrix in $\RR^{n\times n}$ of the negative samples $X$. 
-Let us also assume its factorization $K=BB^T$ and its pseudoinverse $B^\dagger$ are given. We further analyse how to compute $B$ in Subsection~\ref{low-rank}.
+Let us also assume its Cholesky factorization $K=BB^T$ is given as well as the pseudoinverse $B^\dagger$ of its factor. We further analyse how to compute $B$ in Subsection~\ref{low-rank}.
 
 We denote $K'$ the augmented kernel matrix obtained by adding the positive samples $x_0$. Such matrix can be written as
 \begin{equation}
@@ -61,7 +61,7 @@ k_0 & K
 \end{bmatrix},
 \end{equation}
 where $k_{00}=\langle \varphi(x_0),\varphi(x_0)\rangle$ is a scalar and $k_0= [\langle \varphi(x_0),\varphi(x_i)\rangle]_{1\le i\le n}$ is a vector in $\RR^n$. 
-The following lemma show that an $(n+1)\times (r+1)$ factorization of $K'$ can be computed as well.
+The following lemma show that the rank $r+1$ Cholesky factorization of $K'$ can be derived from the Cholesky factorization of its sub-matrix $K$.
 
 \begin{figure}[!h]
 \centering
@@ -70,54 +70,66 @@ The following lemma show that an $(n+1)\times (r+1)$ factorization of $K'$ can b
 \label{proj}
 \end{figure}
 
-\begin{lemma} The augmented kernel matrix $K'$ can be factorized as
-\begin{align}
-K'&= B'B'^T,\quad\text{where}\quad
+\begin{lemma} The augmented kernel matrix $K'$ can be factorized as $K'= B'B'^T$ with
+%\begin{align}
+%K'&= B'B'^T,\quad\text{where}\quad
+%B'=\begin{bmatrix}
+%u & v^T\\0 & B
+%\end{bmatrix}\\
+%v&=B^\dagger k_0,\,\, u=\sqrt{k_{00}-||v||^2}.\label{eq:lemma1}
+%\end{align}
+\begin{equation}
 B'=\begin{bmatrix}
 u & v^T\\0 & B
-\end{bmatrix}\\
-v&=B^\dagger k_0,\,\, u=\sqrt{k_{00}-||v||^2}.\label{eq:lemma1}
-\end{align}
+\end{bmatrix},~
+v = B^\dagger k_0,~ u=\sqrt{k_{00}-||v||^2}.
+\label{eq:lemma1}
+\end{equation}
 \end{lemma}\label{lemma1}
 \begin{proof}
-For $B'$ defined by (\ref{eq:lemma1}), we have that 
+For $B'$ defined by (\ref{eq:lemma1}), we have that
 \begin{equation}
-B'B'^T = \begin{bmatrix} u+|\!|v|\!|^2 & v^TB^T\\ 
-Bv& BB^T\end{bmatrix}.
+B'B'^T = 
+\begin{bmatrix} u^2+\|v\|^2 & v^TB^T\\ 
+Bv& BB^T\end{bmatrix} 
+=\begin{bmatrix} k_{00} & v^TB^T\\ 
+Bv& K\end{bmatrix} .
 \end{equation}
 Since $K'$ is positive semidefinite, $k_0$ must lie in the column space $\mathcal{B}$ of $B$.
 %\footnote{
 Indeed, if we suppose $k_0$ does not belong to $\mathcal{B}$, then it can be decomposed uniquely as $k_0=s+t$, $s\in\mathcal{B}$ and  $t\in\mathcal{B}^\perp$, with $t\ne 0$. In one hand, $K'$ being semidefinite positive implies that $[1, -at^T]K'[1; -at]=k_{00}-2a||t||^2\ge 0$ for all real value $a$. In the other hand, for $a$ large enough, $k_{00}-a||t||^2\le 0$, which is a contradiction.
 %} 
-Hence $v=B^\dagger k_0$ is an exact solution of $Bv=k_0$. The fact that $k_{00}-|\!|v|\!|^2$ is non-negative comes from the fact that the Schur complement $K-|\!|k_0|\!|^2/k_{00}$ of $k_{00}$ in $K'$ is itself positive semidefinite.
+Hence $v=B^\dagger k_0$ is an exact solution of $Bv=k_0$. The fact that $k_{00}-\|v\|^2$ is non-negative comes from the fact that the Schur complement $K-k_0 k_0^T / k_{00}$ of $k_{00}$ in $K'$ is itself positive semidefinite.
 %\footnote{
 Indeed, since the matrix $k_{00}K-k_0k_0^T=B(k_{00}\textbf{Id}_r-vv^T)B^T$ is positive semidefinite and $B$ has rank $r$, $k_{00}\textbf{Id}_r-vv^T$ is also positive semidefinite. Thus $v^T(k_{00}\textbf{Id}_r-vv^T)v = ||v||^2(k_{00}-||v||^2)\ge 0$.
 %}
 \end{proof}
 This lemma allows us to kernelize Equation (\ref{omega:first}) for any positive exemplar $x_0$ for a fixed set of negatives $X$:
 %$\beta^\star(x_0,X), \nu^\star(x_0,X) = \underset{\beta\in\RR^{r+1}, \nu\in\RR}{argmin}J'(\beta, \nu)$, for
-$\beta^\star(x_0,X), \nu^\star(x_0,X) = argmin \ J'(\beta, \nu)$, where
+$\big(\beta^\star(x_0,X),\nu^\star(x_0,X)\big)\in\RR^{r+1}\times\RR$ is the minimize of $J'(\beta, \nu)$, where
 \begin{align}
 J'(\beta, \nu)=
  \theta\ l(1, b_0'^T\beta+\nu) +\dfrac{1}{n}\sumi l(-1,b_i'^T\beta+\nu)
-+\dfrac{\lambda}{2}|\!|\beta|\!|^2,\label{beta:final}
++\dfrac{\lambda}{2}\|\beta\|^2,\label{beta:final}
 \end{align}
-and $b_i'^T$ is the $(i+1)$-th row of $B'$, $i$ in $\{0,1,...,n\}$. In particular, $b_0'=[u; \ v]$ and, for $i>0$, $b_i'=[0; \ b_i]$. $\beta^\star$ and $\nu^\star$ can be computed just as before by Equation (\ref{omega:solution}), replacing $x_0$ by $b_0'$, $X$ by the $(r+1)\times n$ matrix $Q$ of columns $b_1', b_2',...,b_n'$ and $\mu$ by $\mu' = \frac{1}{n}\sum_{i=1}^n b_i'$.
+and $b_i'^T$ is the $(i+1)$-th row of $B'$, $i$ in $\{0,1,...,n\}$. In particular, $b_0'=[u; \ v]$ and, for $i>0$, $b_i'=[0; \ b_i]$. Solution $(\beta^\star,\nu^\star)$ can be computed just as before by Equation (\ref{omega:solution}), replacing $x_0$ by $b_0'$, $X$ by the $(r+1)\times n$ matrix $Q$ of columns $b_1', b_2',...,b_n'$ and $\mu$ by $\mu' = \frac{1}{n}\sum_{i=1}^n b_i'$.
 
 
 \subsection{Matching score}
-Once the optimal parameters $(\beta, \nu)$ from (\ref{beta:final}) and the coordinates $u$, $v$ of $b_0'$ from (\ref{eq:lemma1}) have been found\footnote{We drop the "$\star$" in this subsection to avoid clutter up the notation.}, they can be used directly for measuring similarity between matching images. 
-Indeed, the corresponding vector $\alpha$ (or, more correctly, \textit{a} corresponding value of dimension $n+1$) can be computed by $\alpha = P'\beta$, where $P'=B'(B'^TB')^{-1}$  is the pseudoinverse of $B'^T$. This identity can be written as 
+Once the optimal parameters $(\beta, \nu)$ from (\ref{beta:final}) and the coordinates $u$, $v$ of $b_0'$ from (\ref{eq:lemma1}) have been found\footnote{We drop the ``$\star$'' in this subsection to avoid clutter up the notation.}, they can be used directly for measuring similarity between matching images. 
+Indeed, the corresponding vector $\alpha$ (or, more correctly, \textit{a} corresponding vector of dimension $n+1$) can be computed by $\alpha = P'\beta$, where $P'=B'(B'^TB')^{-1}$  is the pseudoinverse of $B'^T$. This identity can be written as 
 \begin{equation}
 \begin{bmatrix} \alpha_0 \\ \hat{\alpha} \end{bmatrix} = \begin{bmatrix} \frac{1}{u} & 0^T \\-\frac{1}{u}Pv & P  \end{bmatrix} \begin{bmatrix}\beta_0 \\ \hat{\beta} \end{bmatrix},
 \end{equation}
 for $P$ pseudoinverse of $B^T$, $\alpha_0$ and $\beta_0$ scalars.
-Inspired by the matching score of \cite{ZePe15}, the matching score $s(h,h')$ of $h$ and any $h'=\alpha_0'\varphi(x_0')+\sum_{i=1}^n \alpha_i'\varphi (x_i)+\nu'$ in $H$, the representation of another image $x_0'$, is given by 
-\begin{align}
- s(h,h') &= \langle h^\star, h'\rangle= \hat{\alpha}^{T} K\hat{\alpha}'+\alpha_0k(X, x_0)^T\hat{\alpha}'+\alpha_0'k(X, x_0')^T\hat{\alpha}+\alpha_0\alpha_0'k(x_0,x_0')\\
- &=
-\hat{\beta}^T\hat{\beta}'+\frac{\beta_0\beta_0'}{uu'}(k(x_0,x_0')-v^Tv').
-\end{align}
+Inspired by the matching score of \cite{ZePe15}, the matching score $s(h,h')$ of $h$ and any $h'=\alpha_0'\varphi(x_0')+\sum_{i=1}^n \alpha_i'\varphi (x_i)+\nu'$ in $H$, the representation of another image $x_0'$, is given by \PP{So, biases $\nu$ and $\nu'$ are ignored?} 
+\begin{equation}
+\begin{split}
+s(h,h') & = \langle h, h'\rangle \\
+		& = \hat{\alpha}^{T} K\hat{\alpha}'+\alpha_0k(X, x_0)^T\hat{\alpha}'+\alpha_0'k(X, x_0')^T\hat{\alpha}+\alpha_0\alpha_0'k(x_0,x_0')\\
+		& = \hat{\beta}^T\hat{\beta}'+\frac{\beta_0\beta_0'}{uu'}(k(x_0,x_0')-v^Tv').
+\end{split}
+\end{equation}
 
 
 
