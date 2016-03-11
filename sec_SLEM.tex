@@ -12,9 +12,9 @@ w.r.t. $\omega$ in $\RR^d$ and $\nu$ in $\RR$.
 In Equation (\ref{eq:first}), $\lambda$ and $\theta$ are respectively a regularization parameter on $\omega$ and a positive scalar adjusting the weight of the positive exemplar.
 %\footnote{We could also acknowledge a parameter $\theta$ other than $\frac{1}{n}$ as a regularization to the error of each negative example. But this parameters seems to be less important to cross-validate. Also, setting $\theta=\frac{1}{n}$ simplify Equation (\ref{omega:solution}) and allows the use of Woodbury identity.} 
 
-The  exemplar SVM of $x_0$ with respect to $X$ is the classifier $\omega^\star$ that minimizes the function $J$:
+The  exemplar SVM of $x_0$ with respect to $X$ is the classifier $\omega^\star(x_0,X)$ that minimizes the loss function $J$:
 \begin{equation}
-\omega^\star(x_0, X), \nu^\star(x_0, X) = \underset{\omega\in\RR^d, \ \nu\in\RR}{\argmin} \ J(\omega, \nu). \label{omega:first}
+\big(\omega^\star(x_0, X), \nu^\star(x_0, X)\big) = \underset{(\omega,\nu)\in\RR^d\times\RR}{\argmin} \ J(\omega, \nu). \label{omega:first}
 \end{equation}
 To shorten the notation, we refer to these solutions as $\omega^\star$ and $\nu^\star$ when their arguments are implicit.
 
@@ -24,37 +24,37 @@ Applications of E-SVM use the hinge loss function, which guarantees that $J$ is 
 Now, let us study the same learning problem for the square-loss function $l(y,\hat{y}) = \frac{1}{2}(y-\hat{y})^2$. As for the hinge loss, Equation (\ref{eq:first}) is a convex problem. 
 However, differently from the hinge loss, it is now a ridge regression problem, whose solution is expressed in a closed form:
 
-%\begin{align}
-%\begin{cases}
-%\vspace{3 mm}
-%\nu^\star &= \dfrac{\theta-1}{\theta+1}-\dfrac{1}{\theta+1}(\theta x_0+\mu)^T\omega^\star,\\
-%\vspace{3 mm}
-%\omega^\star &= \dfrac{2\theta}{\theta+1}U^{-1}(x_0-\mu), \\
-%\end{cases}
-%\label{omega:solution}
-%\end{align}
-
 \begin{align}
-\nu^\star &= \dfrac{\theta-1}{\theta+1}-\dfrac{1}{\theta+1}(\theta x_0+\mu)^T\omega^\star, \label{eq:nustar}\\
-\omega^\star &= \dfrac{2\theta}{\theta+1}U^{-1}(x_0-\mu) \label{eq:wstar}
+\begin{cases}
+\vspace{3 mm}
+\omega^\star &= \dfrac{2\theta}{\theta+1}U^{-1}(x_0-\mu), \\
+%\vspace{3 mm}
+\nu^\star &= \dfrac{\theta-1}{\theta+1}-\dfrac{1}{\theta+1}(\theta x_0+\mu)^T\omega^\star,
+\end{cases}
+\label{omega:solution}
 \end{align}
+
+%\begin{align}
+%\nu^\star &= \dfrac{\theta-1}{\theta+1}-\dfrac{1}{\theta+1}(\theta x_0+\mu)^T\omega^\star, \label{eq:nustar}\\
+%\omega^\star &= \dfrac{2\theta}{\theta+1}U^{-1}(x_0-\mu) \label{eq:wstar}
+%\end{align}
 where:
 \begin{align}
 &\mu = \frac{1}{n}\sum_{i=1}^n x_i,\\
 &U = \dfrac{1}{n}XX^T-\mu\mu^T+\dfrac{\theta}{\theta+1}(x_0-\mu)(x_0-\mu)^T+\lambda\textbf{Id}_d. \label{eq:U}
 \end{align}
-Equations \ref{eq:nustar}-\ref{eq:wstar} show how to solve (\ref{eq:first}) in a closed form to obtain the SLEM vector $\omega^\star(x_0,X)$ of $x_0$. 
+Equation \ref{omega:solution} shows how to solve (\ref{eq:first}) in a closed form to obtain the SLEM vector $\omega^\star(x_0,X)$ of $x_0$. 
 Replacing the hinge loss by the square loss offers a more compact solution, but not necessarily more efficient.
 
 \subsection{Woodbury identity and matching scores}
 Let us define $A = \frac{1}{n}XX^T-\mu\mu^T +\lambda\textbf{Id}_d$ and assume $A^{-1}$ known. 
 %$A$ is the covariance matrix of the negative samples $X$\footnote{added of a small term proportional to the identity matrix to insure $A$ is positive-definite.}. Let us assume its inverse $A^{-1}$ is known. 
-Matrix $U$ now reads $U = A + \dfrac{\theta}{\theta+1}\delta\delta^T$, where $\delta=x_0-\mu$. The Woodbury identity \cite{woodbury} gives us
+Matrix $U$ now reads $U = A + \frac{\theta}{\theta+1}\delta\delta^T$, where $\delta=x_0-\mu$. The Woodbury identity \cite{woodbury} gives us
 \begin{equation}
 U^{-1} = A^{-1} -\dfrac{\theta}{\theta\delta^TA^{-1}\delta+ \theta+1}A^{-1}\delta^T\delta A^{-1}. \label{invU}
 \end{equation}
 
-Using (\ref{invU}) in (\ref{eq:wstar}) yields
+Using (\ref{invU}) in (\ref{omega:solution}) yields
 \begin{equation}
 \begin{split}
 \omega^\star &= \dfrac{2\theta}{\theta+1}U^{-1}\delta \\
@@ -63,48 +63,46 @@ Using (\ref{invU}) in (\ref{eq:wstar}) yields
 \end{split}
 \end{equation}
 
-The first observation we make from Equation (\ref{Wood:omega}) is the positive sample weight $\theta$ does not influence the direction of the optimal vector $\omega^\star$, only its norm. This means that according to the matching score criteria defined by \cite{ZePe15}, $\theta$ does not influence the matching score of the SLEM vectors of two different images.
-
-Indeed, if $\omega$ and $\omega'$ are the $d$-dimensional SLEM vectors of $x$ and $x'$, respectively, we can denote $s$ the matching score scalar function defined in $\RR^d\times \RR^d$, which is given by
+The first observation we make from Equation (\ref{Wood:omega}) is that the positive sample weight $\theta$ does not influence the direction of the optimal vector $\omega^\star$, only its norm. This means that if search and ranking are based on the cosine-similarity, as in \cite{ZePe15}, $\theta$ does not influence the matching score of the SLEM vectors of two different images.
+Indeed, if $\omega$ and $\omega'$ are the $d$-dimensional SLEM vectors of $x$ and $x'$, respectively, their cosine similarity reads:
+%we can denote $s$ the matching score scalar function defined in $\RR^d\times \RR^d$, which is given by
 \begin{equation}
-s(\omega, \omega') = \dfrac{1}{|\omega||\omega'|}\langle\omega,\omega'\rangle = (x-\mu)^TA^{-2}(x'-\mu).\label{match:score}
+s(\omega, \omega') = \dfrac{\omega^T \omega'}{\|\omega\| \|\omega'\|} = \frac{(x-\mu)^TA^{-2}(x'-\mu)}{\|A^{-1}(x-\mu)\|\|A^{-1}(x'-\mu)\|},\label{match:score}
 \end{equation}
-
-Equation (\ref{match:score}) is independent from the value of $\theta$. This means that the weight of the positive sample can be fixed at any positive value without changing matching scores. This sets the SLEM appart from E-SVM, where in this parameter had to be cross validated \cite{Efros11, ZePe15}.
+which does not depend on the value of $\theta$. This means that the weight of the positive sample can be fixed at any positive value without changing matching scores. This sets the SLEM appart from E-SVM that requires this parameter to be cross validated \cite{Efros11, ZePe15}.
 \subsection{LDA and SLEM}
 
 Let us now reanalyse the SLEM problem and suppose that we have multiple positive samples. It can be shown that in this case, the corresponding linear classifier of Equation (\ref{eq:first}) for the square-loss is also given by
-Equation (\ref{omega:solution}), where $x_0$ denotes this time the center of mass
-of the positive samples, {\em if} these samples have the {\em same} covariance matrix $\Sigma$ of the negative samples $X$.
+(\ref{omega:solution}), where $x_0$ denotes this time the center of mass
+of the positive samples, {\em if} these samples have the {\em same} covariance matrix $\Sigma$ as the negative samples $X$.
  
 This equal-covariance assumption is of course quite restrictive, and
 probably unrealistic in general. It is interesting to note, however,
 that this is exactly the assumption made by linear discriminant
 analysis. As shown in~\cite{Hastie2009} for example, LDA can be seen as a
 (non-regularized) linear classifier
-with decision function $w'\cdot z+ b'$, where $z$ is a sample in
+with decision function $\omega'\cdot z+ b'$, where $z$ is a sample in
 $\RR^d$, and
-
 \begin{equation}
 \left\{\begin{array}{l}
-\displaystyle w'=\Sigma^{-1}(x_0-\mu),\\
-\displaystyle b'=-\frac{1}{2}(x_0+\mu)^T w',
+\displaystyle \omega'=\Sigma^{-1}(x_0-\mu),\\
+\displaystyle b'=-\frac{1}{2}(x_0+\mu)^T \omega',
 \end{array}\right.
 \label{eq:lda}
 \end{equation}
  
-Note that when $\lambda=0$ (no regularization),
+Note that when $\lambda=0$ in SLEM (no regularization),
 \begin{align}
-\Sigma w & = Uw -\frac{1}{2}[(x_0-\mu)^T w] (x_0-\mu) =
-\left[1-\frac{1}{2}(x_0-\mu)^T w\right](x_0-\mu) \\
-&=\left[1-\frac{1}{2}(x_0-\mu)^T w\right]\Sigma w'
+\Sigma \omega & = U\omega -\frac{1}{2}[(x_0-\mu)^T \omega] (x_0-\mu) =
+\left[1-\frac{1}{2}(x_0-\mu)^T \omega\right](x_0-\mu) \\
+&=\left[1-\frac{1}{2}(x_0-\mu)^T \omega\right]\Sigma \omega'
 \end{align}
-thus $w$ and $w'$ have the same direction. In other words, a
+thus $w$ and $w'$ have the same direction \PP{Not sure to get it What is $\omega$ here? $\omega^{\star}$? Also it says that $\Sigma \omega$ and $\Sigma \omega'$ are aligned, not $\omega$ and $\omega'$.}. In other words, a
 SLEM is a generalized version of LDA when the
 regularizer parameter $\lambda $ is zero.
-This observation has been equally made by \cite{Koba15}.
+This observation has been equally made by \cite{Koba15}\PP{For square loss e-svm as well?}.
 
-Many interesting properties of LDA has been rediscovered classification tasks \cite{GMPD12,HMR12} and, more recently, for image retrieval with non-embedded image encoders \cite{babenko15}.
+Many interesting properties of LDA has been rediscovered for classification tasks \cite{GMPD12,HMR12} and, more recently, for image retrieval with non-embedded image encoders \cite{babenko15}.
 
 
 
