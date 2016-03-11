@@ -12,7 +12,7 @@ w.r.t. $\omega$ in $\RR^d$ and $\nu$ in $\RR$.
 In Equation (\ref{eq:first}), $\lambda$ and $\theta$ are respectively a regularization parameter on $\omega$ and a positive scalar adjusting the weight of the positive exemplar.
 %\footnote{We could also acknowledge a parameter $\theta$ other than $\frac{1}{n}$ as a regularization to the error of each negative example. But this parameters seems to be less important to cross-validate. Also, setting $\theta=\frac{1}{n}$ simplify Equation (\ref{omega:solution}) and allows the use of Woodbury identity.} 
 
-The  exemplar SVM of $x_0$ with respect to $\NNN$ is the classifier $\omega^\star$ that minimizes the function $J$:
+The  exemplar SVM of $x_0$ with respect to $X$ is the classifier $\omega^\star$ that minimizes the function $J$:
 \begin{equation}
 \omega^\star(x_0, X), \nu^\star(x_0, X) = \underset{\omega\in\RR^d, \ \nu\in\RR}{\argmin} \ J(\omega, \nu). \label{omega:first}
 \end{equation}

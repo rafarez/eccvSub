@@ -1,8 +1,46 @@
 \section{Prior work}
-\emph{\color{red} paragraph about image search}
+\label{prior work}
 
-The image retrieval litterature 
+\begin{verbatim}
+Classic features:
+-----------------
+VLAD
+Fisher Vector
+Triangulation embedding
+Tolias
 
-%where the query image is the positive example and the rank of an search result image is the score of the score of this image in the classifier obtained by the E-SVM. 
+Enhancements:
+-------------
+Spatial Pyramid Pooling (SPP)
+Hellinger kernel / root SIFT
+Dense sampling
+E-SVM
 
-The application of kernel methods for SVM has an extensive bibliography. \emph{\color{red} so extensive that I do not know yet what to put here...}
+New features:
+-------------
+CNN features
+NetVLAD
+
+Hybrid pooling CNN / aggregator features:
+-----------------------------------------
+VLAD orderless pooling (exploits SPP)
+Conv layers + aggregator: Vedaldi, Kulkarni
+SIFT + FCs: Perronin
+unsup dense: Deep Fisher vector.
+
+
+Kernel methods
+--------------
+\end{verbatim}
+
+% \emph{\color{red} paragraph about image search}
+
+% The image retrieval litterature 
+
+% %where the query image is the positive example and the rank of an search result image is the score of the score of this image in the classifier obtained by the E-SVM. 
+
+% The application of kernel methods for SVM has an extensive bibliography. \emph{\color{red} so extensive that I do not know yet what to put here...}
+
+%%% Local Variables:
+%%% TeX-master: "main_eccv"
+%%% End:

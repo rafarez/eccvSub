@@ -6,31 +6,36 @@ The success of several existing systems in this challenging application has inde
 
 A now pervasive example of an image feature representation is that consisting of the activation coefficients extracted from the previous-to-last layer of Convolutional Neural Networks (CNNs) \cite{}. Although CNNs are trained in a fully-supervised manner for the image classification task, they have been shown to transfer well not only to new, unseen classes \cite{Oquab,Kulkarni,ChatfieldDevil}, but also to alternate tasks such as object detection \cite{RCNN} and, importantly, image retrieval \cite{AstoundingBaseline}.
 
-Yet the more successful current feature representations for image retrieval rely on generative models such as $K$-means \cite{VLAD} or Gaussian Mixture Models \cite{Fisher}. Very few methods \cite{NetVLAD,Aakanksha,Cagdas} exist that exploit supervised learning of image features directly for the image retrieval task. One of the main reasons for this is the lack of adequately large and varied supervised datasets that are expensive to collect \cite{NetVLAD}.
+Yet the more successful current feature representations for image retrieval rely on unsupervised models such as $K$-means \cite{VLAD} or Gaussian Mixture Models \cite{Fisher}. Very few methods \cite{NetVLAD,Aakanksha,Cagdas} exist that exploit supervised learning of image features directly for the image retrieval task. One of the main reasons for this is the lack of adequately large and varied supervised datasets that are expensive to collect \cite{NetVLAD}.
 
 The Exemplar Support Vector Machine (E-SVM) formulation originally proposed by Malisiewicz {\it et al.} \cite{Malisiewicz} is a way to leverage the availability of large, unannotated pools of images within the context of supervised learning. The approach consists of using a large generic pool as a set of negative examples, while using a single image (the \emph{exemplar}) as a positive example. Given these training set, a linear classifier is learned that can  generalize well, despite the drastically limited size of the set of positive examples. 
 
-An extension \cite{ZePe15} of the E-SVM formulation discussed above instead treats the resulting linear classifier as an \emph{enhanced} representation of the image feature representing the exemplar image. Enhanced representations can thus be extracted from each database image, as well as from the query image, by treating each image as an exemplar while keeping a fixed pool of generic negative images. Searching hence amounts to computing distances between these new, enhanced E-SVM features. An interesting aspect of this approach is that the enhanced representation extracts what is unique about the exemplar relative to the pool of generic negatives.
+An extension \cite{ZePe15} of the E-SVM formulation discussed above instead treats the resulting linear classifier as an \emph{enhanced} representation of the image feature representing the exemplar image (the \emph{base} feature representation). Such an E-SVM feature is extracted from each database image, as well as from the query image, by treating each image as an exemplar while keeping a fixed pool of generic negative images. Searching hence amounts to computing distances between these new, enhanced E-SVM features. An interesting aspect of this approach is that the enhanced representation extracts what is unique about the exemplar relative to the pool of generic negatives, as this is the role of a linear classifier.
+
+One important drawback of the E-SVM feature encoding approach of \cite{ZePe15} is that computing the linear classifier requires implementing an iterative Stochastic Gradient Descent (SGD) solver, and this can be time consuming for large negative pool sizes required for good E-SVM feature performance. An SGD-based solution is a consequence of the hinge loss widely used in SVM objetives. Hence in this work we  propose using the squared error instead of the hinge loss, in effect converting the E-SVM problem into a ridge regression problem that can be solved in closed form. The resulting feature, which we call the Squared Loss Exemplar Machine (SLEM) feature, is shown experimentially to incur drastically reduced computation time relative to the E-SVM feature of \cite{ZePe15}. Computing the SLEM feature requires inverting a large matrix related to the training set's scatter matrix. We hence propose an efficient way to compute this inverse that exploits the fact that only a single example (the exemplar) changes in the training set when computing SLEM features for different images. Our efficient implementation exploits the Woodrow identity to express the inverse matrix in terms of the inverse of a sub-matrix related to the generic negative pool, as this sub-matrix inverse can be computed offline.
+
+Despite the computational advantages of the proposed SLEM feature, we further establish experimentally that our representation can match and even improve upon the performance of E-SVM features on two well known datasets and when using a wide range of base features. We further introduce a non-linear kernel variant of SLEM that enjoys even greater computational advantages. We demonstrate analytically that one can exploit the representer theroem to obtain a solution of the non-linear SLEM variant that uses the same closed-form solution used for linear SLEM. Hence, non-linear SLEM enjoys computational advantages comparable to those of linear SLEM, while benefitting from increased image retrieval performance, and we establish both of these points experimentally. In order to further enjoy computational benefits for the non-linear SLEM case, we also introduce a method to further reduce non-linear SLEM feature computation complexity that relies on a low-rank approximation of the negative pool's  kernel matrix obtained by means of a Cholesky decomposition \cite{Bach}.
+
+The rest of this paper is organized as follows: In Section \label{prior work} we provide an overview of various existing feature representation methods. We then introduce the proposed SLEM feature in Section \label{lsesvm}, subsequently presenting the non-linear variant in Section \label{nonlinear SLEM}. We then present the low-rank approximation of our method that enables efficient implementations in the non-linear case in  Section \label{eff_imp}. We evaluate our proposed method in image retrieval in Section \label{sec_eval}, and present conclusions in Section \label{conclusion}.
 
 
+% Image search
+% - Importance.
+% - Feature representations. 
 
-Image search
-- Importance.
-- Feature representations. 
+% Feature representation - supervised learning
+% - Generic framework.
+% - Deep CNN features.
+% - ImageNet.
 
-Feature representation - supervised learning
-- Generic framework.
-- Deep CNN features.
-- ImageNet.
+% Image retrieval
+% - Supervised - Eusipco, NetVLAD.
+% - VLAD, Fisher.
+% - Cheaper.
 
-Image retrieval
-- Supervised - Eusipco, NetVLAD.
-- VLAD, Fisher.
-- Cheaper.
-
-Pool:
-LDA
-SVMs for feature representations - parts learning, Malizsiewics
+% Pool:
+% LDA
+% SVMs for feature representations - parts learning, Malizsiewics
 
 
 %\section {Introduction}
