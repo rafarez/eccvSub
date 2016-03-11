@@ -10,7 +10,7 @@ Two ideas allow us to solve the kernelized problem linearly in $n$: low-rank dec
 In this section we start by revisiting the Cholesky algorithm of the construction of $B$, as presented in ~\cite{BaJo05,FiSc01}. 
 We denote, for any list of indexes $M$, $N$ in $\{1,2,...,n\}$, $K(M,N)$ the submatrix of $K$ composed of the rows indexed by $M$ and columns indexed by $N$ and $K(M,:)$ the submatrix of $K$ composed by rows indexed by $M$ and all columns.
 Let us assume a sequence of indexes $I_r=\{i_1,i_2,\dots ,i_r\}$ from $\{1,2,\dots, n\}$ is known. 
-We also denote, for $t$ in $\{1,2,...,r\}$, $I_t=\{i_1,...,i_t\}$ the subset of the $t$ first indexes of $I_r$and $J_t=\{1,2,...,n\}/ I_t$ the complement of the $t$ first indexes.
+We also denote, for $t$ in $\{1,2,...,r\}$, $I_t=\{i_1,...,i_t\}$ the subset of the $t$ first indexes of $I_r$ and $J_t=\{1,2,...,n\}/ I_t$ the complement of the $t$ first indexes.
 $I_r$ is the set of pivots, chosen greedily such that $i_t$ minimizes the error approximation between $B_tB_t^T$ and $K$, where $B_t=B(I_t,:)$. 
 
 Given $I_t$, we can calculate the $t$-th column, $t=1,2,...,r$, of $B$ iteratively:
@@ -20,13 +20,12 @@ Given $I_t$, we can calculate the $t$-th column, $t=1,2,...,r$, of $B$ iterative
 B(i_t, t) = \left(K(i_t,i_t)-\sum_{m=1}^{t-1} B(i_{m},m)  \right)^{\frac{1}{2}},\\
 \vspace{3 mm}
 B(I_{t-1},t) = 0,\\
-B(J_t, t) = \frac{1}{B(i_t,t)}(K(J_t,i_t)\\
-\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \  -\sum_{m=1}^{t-1}B(J_t,m)B(i_t,m)
+B(J_t, t) = \frac{1}{B(i_t,t)}(K(J_t,i_t)  -\sum_{m=1}^{t-1}B(J_t,m)B(i_t,m)
 ).\end{cases}\label{icd:algo}
 \end{align}
 The time complexity of the $t$-th interaction is $O(tn)$, thus making the full algorithm $O(nr^2)$ in time. Since $B$ is $n\times r$, storage complexity is $O(nr)$. In particular, \cite{BaJo05} shows us that, for $t$ in $\{1,2,...,r\}$, the error matrix $K-B_tB_t^T$ is a $(n-t)\times (n-t)$ block matrix which is the Schur complement of $K(I_t,I_t)$ in $K$ and zero elsewhere.
 
-For many kernels such as the Gaussian, $K$ can be a full rank matrix. Its Cholesky decomposition is hence a $O(n^3)$ operation in time, which is a prohibitive cost for large negative sets $X$. We propose stopping the algorithm described in (\ref{icd:algo}) after a given number $r'<r$ of steps, and use $B_{r'}$ as an approximation of $B$. We also need to know only the $r'$ first pivots, which we call $I$ from now on. Conversely, we note $J=J_{r'}$. The construction of $B'$ from $B_{r'}$ can be adapted as presented in the following lemma:
+For many kernels such as the Gaussian kernel, $K$ can be a full rank matrix. Its Cholesky decomposition is hence a $O(n^3)$ operation in time, which is a prohibitive cost for large negative sets $X$. We propose stopping the algorithm described in (\ref{icd:algo}) after a given number $r'<r$ of steps, and use $B_{r'}$ as an approximation of $B$. We also need to know only the $r'$ first pivots, which we call $I$ from now on. Conversely, we note $J=J_{r'}$. The construction of $B'$ from $B_{r'}$ can be adapted as presented in the following lemma:
 %\begin{proposition}
 %There is an unique $n\times n$ matrix $L$ such that
 %\begin{itemize}
@@ -43,12 +42,13 @@ For many kernels such as the Gaussian, $K$ can be a full rank matrix. Its Choles
 %\end{proposition}
 %From \textbf{Proposition 1}, $L$ is an unique approximation of $K$ for a given pair $I$ and $J$. The algorithm from (\ref{icd:algo}) construct $B$ such that $L=BB^T$.
 \begin{lemma}
-The augmented kernel matrix $K'$ can be factorized as
-\begin{align}
-K'&\approx B'B'^T,\quad\text{where}\quad
-B'=\begin{bmatrix} u & v^T\\w & B_{r'} \end{bmatrix},\quad
-v=B_I^{-1} k_0(I),\\u&=\sqrt{k_{00}-||v||^2},\,\, w(I) = 0,\,\, w(J)=\dfrac{1}{u}(k_0(J)-B_Jv)
-\end{align}
+The augmented kernel matrix $K'$ can be factorized as $K'\approx B'B'^T$ where
+\begin{equation}
+\begin{split}
+& B'=\begin{bmatrix} u & v^T\\w & B_{r'} \end{bmatrix},~ v=B_I^{-1} k_0(I),~ u=\sqrt{k_{00}-\|v\|^2},\\
+& w(I) = 0,~w(J)=\dfrac{1}{u}(k_0(J)-B_Jv),
+\end{split}
+\end{equation}
 in time $O(nr')$ and storage $O(n)$. Also, the approximation error of $K'$ and $B'B'^T$ is the same of $K$ and $B_{r'}B_{r'}^T$. Here, $B_I$ and $B_J$ denote $B(I,I)$ and $B(J,I)$, respectively.
 \end{lemma}
 The proof of this lemma is similar to the previous lemma's proof, only adding the $\RR^n$ vector $w$ whose entries are calculated by Equation (\ref{icd:algo}).
@@ -62,19 +62,19 @@ The proof of this lemma is similar to the previous lemma's proof, only adding th
 %Algorithm (\ref{icd:algo}) is such that the rank of $B_{r'}$ is $r'$, for all $r'<r$.
 %\end{proof}
 \subsection{Woodbury identity}
-Let us call $A=\frac{1}{n}QQ^T-\mu'\mu'^T+\lambda\textbf{Id}_{r+1}$. We assume its inverse $A^{-1}$ known. From (\ref{omega:solution}) for the kernelized version, we know that $U=A+\frac{\theta}{\theta+1}\delta\delta^T$, for $\delta=b_0'-\mu'$. The Woodbury identity gives us 
+Let us call $A=\frac{1}{n}QQ^T-\mu'\mu'^T+\lambda\textbf{Id}_{r+1}$, where $Q$ and $\mu'$ are defined at the end of \S \ref{subsec:adding}. We assume its inverse $A^{-1}$ known. From the kernalized version of (\ref{omega:solution}), we know that $U=A+\frac{\theta}{\theta+1}\delta\delta^T$, with $\delta=b_0'-\mu'$. The Woodbury identity gives us 
 \begin{equation}
 U^{-1}=A^{-1} -\dfrac{\theta}{\theta\delta^TA^{-1}\delta+ \theta+1}A^{-1}\delta^T\delta A^{-1}.\label{wood1}
 \end{equation}
-Replacing (\ref{wood1}) in the original equation 
+Replacing (\ref{wood1}) in the original equation yields the solution
 \begin{equation}
 \beta^\star = \dfrac{2\theta}{\theta+1}U^{-1}\delta = \dfrac{2\theta}{\theta\delta^TA^{-1}\delta+ \theta+1}A^{-1}\delta,\label{beta:fromwood}
 \end{equation}
-which gives the solution $\beta^\star$ dependent only $A^{-1}$, $\theta$, $\mu'$ and $b_0'$. 
-We can thus solve only one system for $A$ for \textit{all} positives, instead of one in $U$ for \textit{each} positive.
+which depends only $A^{-1}$, $\theta$, $\mu'$ and $b_0'$. 
+We can thus solve only one linear system with matrix $A$ for \textit{all} positives, instead of one in $U$ for \textit{each} positive.
 
-If we decompose $K$ at rank $r$, $A$ is constant for all positives, since $Q = [\textbf{0}, B]$ and $\mu'=[0; \mu]$.\footnote{Here, $\mu$ is the center of mass of the rows of $B$, not the columns of $X$ as initially presented in section \ref{lsesvm}.} 
-But for a low-rank decomposition, $Q=[w, B_{r'}]$ and $\mu' = [\bar{w}; \mu]$. If so, $A$ is written as 
+If we decompose $K$ at rank $r$, $A$ is constant for all positives, since $Q = [0, B]$ and $\mu'=[0; \mu]$.\footnote{Here, $\mu$ is the center of mass of the rows of $B$, not the columns of $X$ as initially presented in section \ref{lsesvm}.} 
+But for a low-rank decomposition, we have instead $Q=[w, B_{r'}]$ and $\mu' = [\bar{w}; \mu]$. If so, $A$ is written as 
 \begin{equation}
 A = \begin{bmatrix}
 a_{00} & a_0^T\\
@@ -83,14 +83,14 @@ a_0^T & G
 \end{equation}
 where $a_{00}=\dfrac{1}{n}w^Tw-\bar{w}^2+\lambda$, $a_0 = \dfrac{1}{n}B_{r'}^Tw-\bar{w}\mu$ and $G=\dfrac{1}{n}B_{r'}^TB_{r'}-\mu\mu^T+\lambda\text{Id}_r$.
 
-$G$ depends only on $B$ and can be calculated in time $O(nr'^2)$ and storage $O(r'^2)$. 
+Matrix $G$ depends only on $B$ and can be calculated in time $O(nr'^2)$ and storage $O(r'^2)$. 
 Its inverse $G^{-1}$ is computed at cost $O(r'^3)$.
 The Woodbury identity, again, allows the computation of $A^{-1}$ from $G^{-1}$ at cost $O(r^2)$:
 \begin{equation}
 A^{-1} = \begin{bmatrix}\gamma & -\gamma a_0^TG^{-1}\\ -\gamma G^{-1}a_0 & G^{-1}+\gamma G^{-1}a_0a_0^TG^{-1}\end{bmatrix},\label{wood2}
 \end{equation}
 where $\gamma = \left(a_{00}-a_0^TG^{-1}a_0\right)^{-1}$. Finally, replacing (\ref{wood2}) in (\ref{beta:fromwood}), we can obtain $\beta^\star$ by solving the linear problem $A\beta^\star = \delta$. 
-Both $A$ and $\delta$ are dependent on $u$, $v$ and $w$, which are the computed for each exemplar as described by Lemma 2.
+Both $A$ and $\delta$ are dependent on $u$, $v$ and $w$, which are computed for each exemplar as described by Lemma 2.
 
 %%% Local Variables:
 %%% TeX-master: "main_eccv"
