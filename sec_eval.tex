@@ -23,25 +23,44 @@ We tested four different kernels: linear kernel, RBF kernel, polynomial kernel a
     &k_{linear}(x,y) = x^Ty; \label{k:lin}\\
     &k_{rbf}(x,y) = \exp(-\gamma|\! |x-y|\! |^2); \label{k:rbf}\\
     &k_{poly}(x,y) = x^Ty+\gamma(x^Ty)^2; \label{k:poly}\\
-    &k_{spp}(x,y) = \dfrac{1}{2^L}\mathcal{I}(H^0_x, H^0_y) +\sum_{l=1}^L\dfrac{1}{2^{L-l+1}}\mathcal{I}(H^{l,_gamma}_x, H^{l,\gamma}_y). \label{k:spm}
+    %&k_{spp}(x,y) = \dfrac{1}{2^L}\mathcal{I}(H^0_x, H^0_y) +\sum_{l=1}^L\dfrac{1}{2^{L-l+1}}\mathcal{I}(H^{l,\gamma}_x, H^{l,\gamma}_y). \label{k:spm}
 \end{align}
 \textbf{Linear SLEM} The linear kernel of Equation (\ref{k:lin}) is the first default choice and equivalent to the non-kernelized version of SLEM.
 In the remaining of this paper, we reference to linear SLEM when we use the non-kernelized SLEM.
 \textbf{Gaussian SLEM} The radial basis function kernel of Equation (\ref{k:rbf}) is a
 well known reproducing kernel, used for classification with support vector machines.
 \textbf{Polynomial SLEM} The polynomial kernel of Equation (\ref{k:poly}) is a reproducing kernel normally used in natural language processing. 
-This three kernels are amount the most used kernels in the machine learning literature.
-\textbf{SPM SLEM} The pyramid match kernel of Equation (\ref{k:spm}) is a Mercer kernel introduced in \ref{GrauDa05} 
-
+%\textbf{SPM SLEM} The spatial pyramid matching kernel of $L+1$ levels in Equation \ref{k:spm} take as input a set of local descriptors and its location in pyramidal bins \cite{spk}. 
 
 
 \subsection{Base visual features}
-Local descriptors: RootSIFT \cite{3things} and deep convolutional features \cite{SimonZisser15}
+We test our feature encoder for two different features, one hand-crafted image representation and one learned from deep convolutional neural networks.
 
-Embedding: VLAD features \cite{VLAD} and aggregation \cite{babenko15}
 
-Caffe CNN features \cite{jia2014caffe}
+We revisit the VLAD feature presented in \cite{VLAD} as an example of a hand-crafted representation. First we extract a set $\mathcal{F}$ of local descriptors of an image $I$. We use the 128 dimension RootSIFT \cite{3things} descriptors, extracted densely. 
+Then, we hard-assign each descriptor $f$ in $\mathcal{F}$ to one of $K$ set $\mathcal{C}_k$ of descriptors associated to codewords $\{c_k\}_{1\leq k\leq K}$, and map $f$ a $\RR^{128K}$ vector 
+\begin{equation}
+\phi^{VL}_1(f) = \left[0 \ 0 \ 0 ..., \Phi_k^T\frac{(f-c_k)}{||f-c_k||},... 0\right],
+\end{equation}
+where $\Phi_k$ is the $128\times 128$ PCA matrix associated to descriptors in $\mathcal{C}_k$. 
+The final VLAD representation is the power-normalization and $l_2$ normalization of the sum-pooling of $\phi^{VL}_1$:
+\begin{equation}
+\phi^{VL}_2(I) = \sum_{f\in \mathcal{F}}\phi^{VL}_1(f).
+\end{equation}
+In this paper, we use $K=64$ codewords learned in images from Flickr. Our VLAD representation has 8192 dimensions.
 
+Convolutional features obtained from very deep neural networks have been shown to work as good matching local descriptors \cite{SimonZisser15}. 
+The SPoC representation \cite{babenko15} is a weighted sum-pooling of the activations of the last convolutional layer of a 19 layer convolutional neural network. 
+Indeed, if our last convolutional layer has $D$ neurons, and each neuron a $W\times H$ map of activations of this neurons to the image $I$, 
+each pair $(w,h)$ with $w$ in $\{1,2,..., W\}$ and $h$ in $\{1,2,...,H\}$ can be associated to a descriptor $f_{(h,w)}$ in $\RR^D$ of the responses of each neuron at coordinate $(w,h)$ of the maps. 
+We then sum-pool the descriptors $f_{(w,h)}$ weighted accordingly to its distance to the center of the image:
+\begin{equation}
+    \phi^{SPoC}(I) = \sum_{w=1}^W\sum_{h=1}^H \alpha_{(w,h)}f_{(w,h)},
+\end{equation}
+where
+\begin{equation}
+    \alpha_{(w,h)} = exp \left(-\dfrac{(w-W/2)^2+(h-H/2)^2}{2\sigma^2}\right).
+\end{equation}
 
 %We use four base features as the representation in $\RR^d$ of our images. Firstly, we use VLAD features, as used in \cite{ZePe15}. 
 %CNN features are non-negative and can be used both as $\mathbb{L}^1$ or $\mathbb{L}^2$ normalized features. The third features are spatial pyramids of SIFT descriptors, as used in \cite{spk}. These are non-negative $\mathbb{L}^1$ normalized features. \emph{\color{red} Details of these features construction are not relevant right now.}
@@ -64,16 +83,15 @@ Kernelized SLEM: at most $0.3$ seconds (for RBF kernel) for each iteration of (\
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Method, features & VLAD-64 \cite{VLAD}& CNN \cite{jia2014caffe} & Root-SIFT \cite{3things} & SPoC CNN \cite{babenko15} &  SP-CNN \cite{SPPCNN} \\
+Method, features & VLAD-64 \cite{VLAD}& SPoC CNN \cite{babenko15} &  SP-CNN \cite{SPPCNN} \\
 \hline\hline
-Baseline            & 72.7 & 68.2 & 37.4 & 73.1 & 64.7\\
+Baseline            & 72.7  & 73.1 & 64.7\\
 %Whitening           & -    & -    & -    & -    & -\\
-LDA                 & 69.4 & 69.2 & -    & 77.5 & -\\
-E-SVM               & 77.5 & 71.3 & 40.1 & 79.8 & 64.7 \\
-Linear SLEM         & 78   & 72.1 & 38.2 & 78.3 & 68 \\
-Gaussian SLEM       & 78.1 & 72.9 & 39.7 & 81.4 & 68.6 \\
-Poly SLEM           & 78.1 & 72.9 & -    & 82   &   -   \\
-SPM SLEM            & -    & 70.2 & 66.9 & -    & 70.2 \\
+LDA                 & 69.4 & 77.5 & -\\
+E-SVM               & 77.5 & 79.8 & 64.7 \\
+Linear SLEM         & 78   & 78.3 & 68 \\
+Gaussian SLEM       & 78.1 & 81.4 & 68.6 \\
+Poly SLEM           & 78.1 &  82   &   -   \\
 \hline
 \end{tabular}
 \end{center}
@@ -85,15 +103,14 @@ SPM SLEM            & -    & 70.2 & 66.9 & -    & 70.2 \\
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Method, features & VLAD-64 \cite{VLAD}& CNN \cite{jia2014caffe} & SP-SIFT \cite{spk} & SPoC CNN \cite{babenko15} &  SP-CNN \cite{SPPCNN} \\
+Method, features & VLAD-64 \cite{VLAD} & SPoC CNN \cite{babenko15} &  SP-CNN \cite{SPPCNN} \\
 \hline\hline
-Baseline            & 46.3 & 40.6 & - & 54.4 & 44 \\
+Baseline            & 46.3 & 54.4 & 44 \\
 %Whitening           & 07   & 20.2 & - & -    & -\\
-LDA                 & 50.9 & 45   & - & 63.7 & 37.4\\
-E-SVM               & 57.5 & 44.6 & - & 62.1 & - \\
-Linear SLEM         & 57.5 & 45.5 & - & 64.1 & 45 \\
-Gaussian SLEM       & 59   & 46.1 & - & 64.9 & 45 (no cv) \\
-Intersection SLEM   & -    & 42.2 & - & -    & - \\
+LDA                 & 50.9 & 63.7 & 37.4\\
+E-SVM               & 57.5  & 62.1 & - \\
+Linear SLEM         & 57.5  & 64.1 & 45 \\
+Gaussian SLEM       & 59    & 64.9 & 45 (no cv) \\
 \hline
 \end{tabular}
 \end{center}
@@ -102,6 +119,9 @@ Intersection SLEM   & -    & 42.2 & - & -    & - \\
 
 
 \subsection{Time Scalability} \label{time-scale}
+In this section we compare the time efficiency of our method and the E-SVM, as well as discuss which method to use accordingly with the number of positive and negative samples.
+
+We test both methods for $n=6000$ and $n=15000$ negative samples. It is important to note that, since ESVM is optimized by a stochastic gradient descent, its time calculation depends linearly on the number of iterations $T$ it takes to the cost function to converge. We follow the instructions of \cite{ZePe15} and set $T=10000$ for $n=6000$ and $T=100000$ for $n=15000$.
 \begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.32\textwidth}
@@ -116,6 +136,7 @@ Intersection SLEM   & -    & 42.2 & - & -    & - \\
 \caption{Comparison between time calculation feature encoding for different methods. At left, we use $n=6000$ negative examples. At right, $n=15000$ negative examples. In both experiments, we use VLAD as base features.}
 \label{time:scalar}
 \end{figure}
+Figure \ref{time:scalar} show how SLEM and ESVM scale for different number of images. Time calculation for ESVM increases linearly with the 
 
 \subsection{Low-rank decomposition evaluation}
 
@@ -127,12 +148,12 @@ Intersection SLEM   & -    & 42.2 & - & -    & - \\
 \begin{subfigure}[b]{0.48\textwidth}
 \includegraphics[width=\textwidth]{rbf_decomposition_nolog.png}
 \end{subfigure}
-\caption{Comparison between full rank and low rank. In blue, mAP results for 
-
-At the left, comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. At the right, comparision between the gaussian kernel results and its low-rank decomposition results. In blue, mAP of the full-rank Gaussian SLEM. In red, mAP for different low-rank decomposition of Gaussian SLEM. In this experiment, $r=10281$.}
+\caption{Comparison between full rank and low rank. In blue, mAP results for full rank SLEM. In red, mAP results for low rank decomposition of SLEM, varying the rank $r'$.
+At the left, linear SLEM results;at the right, Gaussian SLEM results. In this experiment, $n=10281$.}
 \label{no.ker.vs.linear2}
 \end{figure}
 
+\subsection{Recursive SLEM}
 %\caption{Comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. }
 
 %\caption{Comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. }
