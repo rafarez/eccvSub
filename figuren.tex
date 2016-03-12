@@ -1,9 +1,12 @@
 
+
+
+%%n{figure}
+\centering
 \begin{tikzpicture}
 	\begin{axis}[
 		xlabel=Number of negative samples,
-		ylabel=mAP,
-		legend pos=south east]
+		ylabel=mAP]
 %% Poly SLEM
 	\addplot[PolySLEM] coordinates {
 		(500,  0.78852)
@@ -83,7 +86,9 @@
 	\begin{semilogyaxis}[
 		xlabel=Number of negative samples,
 		ylabel=Time per positive image,
-		legend pos=south east]
+		legend style={at={(0.415,-0.3)},
+         anchor=north,legend columns=-1},
+		legend pos=outer south]
 %% Poly SLEM
 	\addplot[PolySLEM] coordinates {
 		(500,  0.0001)
@@ -102,7 +107,7 @@
 		(13500,0.1434)
 		(14500,0.1745)
 	};
-	%\addlegendentry{Poly SLEM}
+	\addlegendentry{Poly SLEM}
 %% Gaussian SLEM
 	\addplot[GaussSLEM] coordinates {
 		(500,  0.0003)
@@ -121,7 +126,7 @@
 		(13500,0.1301)
 		(14500,0.161)
 	};
-	%\addlegendentry{Gaussian SLEM}
+	\addlegendentry{Gaussian SLEM}
 %% ESVM
 	\addplot[ESVM] coordinates {
 		(500,  0.014)
@@ -140,7 +145,7 @@
 		(13500,0.027)
 		(14500,0.028)
 	};
-	%\addlegendentry{ESVM}
+	\addlegendentry{ESVM}
 %% Linear SLEM
     \addplot[LinSLEM] coordinates {
 		(500,  0.0000565)
@@ -159,13 +164,12 @@
 		(13500,0.000075)
 		(14500,0.0001141)
 	};
-	%\addlegendentry{Linear SLEM}
+	\addlegendentry{Linear SLEM}
 	\end{semilogyaxis}
 \end{tikzpicture}
-
-
-
-
-%%% Local Variables:
+\caption{Results for INRIA Holidays, using SPoC features and different methods of SLEM (see legend).}
+\label{fig:my_label}
+\end{figure}
+% Local Variables:
 %%% TeX-master: "main_eccv"
 %%% End:
