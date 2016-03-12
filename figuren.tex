@@ -3,7 +3,7 @@
 	\begin{axis}[
 		xlabel=Number of negative samples,
 		ylabel=mAP,
-                legend pos=south east]
+		legend pos=south east]
 %% Poly SLEM
 	\addplot[PolySLEM] coordinates {
 		(500,  0.78852)
@@ -22,8 +22,6 @@
 		(13500,0.81993)
 		(14500,0.82057)
 	};
-        \addlegendentry{Poly. SLEM}
-
 %% Gaussian SLEM
 	\addplot[GaussSLEM] coordinates {
 		(500,  0.77757)
@@ -42,7 +40,6 @@
 		(13500,0.80813)
 		(14500,0.81214)
 	};
-        \addlegendentry{Gaussian SLEM}
 %% ESVM
 	\addplot[ESVM] coordinates {
 		(500,  0.7684)
@@ -61,15 +58,32 @@
 		(13500,0.79930)
 		(14500,0.79905)
 	};
-        \addlegendentry{ESVM}
+%% Linear SLEM
+    \addplot[LinSLEM] coordinates {
+		(500,  0.77638)
+		(1500, 0.7748)
+		(2500, 0.77919)
+		(3500, 0.77914)
+		(4500, 0.7748)
+		(5500, 0.77578)
+		(6500, 0.77902)
+		(7500, 0.78338)
+		(8500, 0.78043)
+		(9500, 0.78026)
+		(10500,0.77803)
+		(11500,0.77767)
+		(12500,0.77818)
+		(13500,0.78148)
+		(14500,0.78254)
+	};
 	\end{axis}
 \end{tikzpicture}
 
 \begin{tikzpicture}
 	\begin{semilogyaxis}[
 		xlabel=Number of negative samples,
-		ylabel=Time of calculation per positive image,
-                legend pos=south east]
+		ylabel=Time per positive image,
+		legend pos=south east]
 %% Poly SLEM
 	\addplot[PolySLEM] coordinates {
 		(500,  0.0001)
@@ -88,7 +102,7 @@
 		(13500,0.1434)
 		(14500,0.1745)
 	};
-        \addlegendentry{Poly. SLEM}
+	%\addlegendentry{Poly SLEM}
 %% Gaussian SLEM
 	\addplot[GaussSLEM] coordinates {
 		(500,  0.0003)
@@ -107,28 +121,48 @@
 		(13500,0.1301)
 		(14500,0.161)
 	};
-        \addlegendentry{Gaussian SLEM}
+	%\addlegendentry{Gaussian SLEM}
 %% ESVM
 	\addplot[ESVM] coordinates {
-		(500,  0.016)
-		(1500, 0.0165)
-		(2500, 0.017)
-		(3500, 0.0175)
-		(4500, 0.024)
-		(5500, 0.028)
-		(6500, 0.028)
-		(7500, 0.028)
-		(8500, 0.028)
-		(9500, 0.028)
-		(10500,0.028)
-		(11500,0.028)
-		(12500,0.028)
-		(13500,0.028)
+		(500,  0.014)
+		(1500, 0.015)
+		(2500, 0.016)
+		(3500, 0.017)
+		(4500, 0.018)
+		(5500, 0.019)
+		(6500, 0.02)
+		(7500, 0.021)
+		(8500, 0.022)
+		(9500, 0.023)
+		(10500,0.024)
+		(11500,0.025)
+		(12500,0.026)
+		(13500,0.027)
 		(14500,0.028)
 	};
-        \addlegendentry{ESVM}
+	%\addlegendentry{ESVM}
+%% Linear SLEM
+    \addplot[LinSLEM] coordinates {
+		(500,  0.0000565)
+		(1500, 0.0000575)
+		(2500, 0.0000467)
+		(3500, 0.0000679)
+		(4500, 0.0000683)
+		(5500, 0.0000612)
+		(6500, 0.0000608)
+		(7500, 0.0000708)
+		(8500, 0.0000743)
+		(9500, 0.0000996)
+		(10500, 0.0000993)
+		(11500,0.0001073)
+		(12500,0.0001027)
+		(13500,0.000075)
+		(14500,0.0001141)
+	};
+	%\addlegendentry{Linear SLEM}
 	\end{semilogyaxis}
 \end{tikzpicture}
+
 
 
 
