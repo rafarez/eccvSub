@@ -4,7 +4,7 @@
 		xlabel=Number of negative samples,
 		ylabel=mAP]
 %% Poly SLEM
-	\addplot[color=blue,mark=*] coordinates {
+	\addplot[PolySLEM] coordinates {
 		(500,  0.78852)
 		(1500, 0.80397)
 		(2500, 0.80648)
@@ -21,9 +21,10 @@
 		(13500,0.81993)
 		(14500,0.82057)
 	};
+        \addlegendentry{Poly. SLEM}
 
 %% Gaussian SLEM
-	\addplot[color=green,mark=*] coordinates {
+	\addplot[GaussSLEM] coordinates {
 		(500,  0.77757)
 		(1500, 0.79756)
 		(2500, 0.80338)
@@ -40,8 +41,9 @@
 		(13500,0.80813)
 		(14500,0.81214)
 	};
+        \addlegendentry{Gaussian SLEM}
 %% ESVM
-	\addplot[color=red] coordinates {
+	\addplot[ESVM] coordinates {
 		(500,  0.7684)
 		(1500, 0.78434)
 		(2500, 0.78836)
@@ -58,6 +60,7 @@
 		(13500,0.79930)
 		(14500,0.79905)
 	};
+        \addlegendentry{ESVM}
 	\end{axis}
 \end{tikzpicture}
 
@@ -66,7 +69,7 @@
 		xlabel=Number of negative samples,
 		ylabel=Time of calculation per positive image]
 %% Poly SLEM
-	\addplot[color=blue,mark=*] coordinates {
+	\addplot[PolySLEM] coordinates {
 		(500,  0.0001)
 		(1500, 0.0007)
 		(2500, 0.0023)
@@ -83,8 +86,9 @@
 		(13500,0.1434)
 		(14500,0.1745)
 	};
+        \addlegendentry{Poly. SLEM}
 %% Gaussian SLEM
-	\addplot[color=blue,mark=*] coordinates {
+	\addplot[GaussSLEM] coordinates {
 		(500,  0.0003)
 		(1500, 0.0008)
 		(2500, 0.0021)
@@ -101,8 +105,9 @@
 		(13500,0.1301)
 		(14500,0.161)
 	};
+        \addlegendentry{Gaussian SLEM}
 %% ESVM
-	\addplot[color=red] coordinates {
+	\addplot[ESVM] coordinates {
 		(500,  0.016)
 		(1500, 0.0165)
 		(2500, 0.017)
@@ -119,6 +124,7 @@
 		(13500,0.028)
 		(14500,0.028)
 	};
+        \addlegendentry{ESVM}
 	\end{axis}
 \end{tikzpicture}
 
