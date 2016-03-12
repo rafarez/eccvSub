@@ -61,10 +61,7 @@ where
 \begin{equation}
     \alpha_{(w,h)} = exp \left(-\dfrac{(w-W/2)^2+(h-H/2)^2}{2\sigma^2}\right).
 \end{equation}
-
-%We use four base features as the representation in $\RR^d$ of our images. Firstly, we use VLAD features, as used in \cite{ZePe15}. 
-%CNN features are non-negative and can be used both as $\mathbb{L}^1$ or $\mathbb{L}^2$ normalized features. The third features are spatial pyramids of SIFT descriptors, as used in \cite{spk}. These are non-negative $\mathbb{L}^1$ normalized features. \emph{\color{red} Details of these features construction are not relevant right now.}
-
+In this paper, we follow the implementation details of \cite{babenko15}: We resize all images to $586\times 586$ pixels before forwarding them to the network. As such, the last convolutional layer has 512 neurons and each neuron has an activation map where $W=37$ and $H=37$. We also set $\sigma=\frac{H}{3}$.
 
 \subsection{Implementation details}
 \emph{\color{red} Not relevant right now.  To be written.}
@@ -79,19 +76,21 @@ Kernelized SLEM: at most $0.3$ seconds (for RBF kernel) for each iteration of (\
 
 \subsection{Full rank results}
 
+\textbf{\emph{Holidays} and \emph{Oxford 5k} results}
+
 \begin{table*}[t]
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Method, features & VLAD-64 \cite{VLAD}& SPoC CNN \cite{babenko15} &  SP-CNN \cite{SPPCNN} \\
+Method, features & VLAD-64 \cite{VLAD}& SPoC CNN \cite{babenko15}  \\
 \hline\hline
-Baseline            & 72.7  & 73.1 & 64.7\\
+Baseline            & 72.7  & 73.1 \\
 %Whitening           & -    & -    & -    & -    & -\\
-LDA                 & 69.4 & 77.5 & -\\
-E-SVM               & 77.5 & 79.8 & 64.7 \\
-Linear SLEM         & 78   & 78.3 & 68 \\
-Gaussian SLEM       & 78.1 & 81.4 & 68.6 \\
-Poly SLEM           & 78.1 &  82   &   -   \\
+LDA                 & 69.4 & 77.5 \\
+E-SVM               & 77.5 & 79.8 \\
+Linear SLEM         & 78   & 78.3 \\
+Gaussian SLEM       & 78.1 & 81.4 \\
+Poly SLEM           & 78.1 &  82  \\
 \hline
 \end{tabular}
 \end{center}
@@ -103,14 +102,15 @@ Poly SLEM           & 78.1 &  82   &   -   \\
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Method, features & VLAD-64 \cite{VLAD} & SPoC CNN \cite{babenko15} &  SP-CNN \cite{SPPCNN} \\
+Method, features & VLAD-64 \cite{VLAD} & SPoC CNN \cite{babenko15} \\
 \hline\hline
-Baseline            & 46.3 & 54.4 & 44 \\
+Baseline            & 46.3 & 54.4 \\
 %Whitening           & 07   & 20.2 & - & -    & -\\
-LDA                 & 50.9 & 63.7 & 37.4\\
-E-SVM               & 57.5  & 62.1 & - \\
-Linear SLEM         & 57.5  & 64.1 & 45 \\
-Gaussian SLEM       & 59    & 64.9 & 45 (no cv) \\
+LDA                 & 50.9 & 63.7 \\
+E-SVM               & 57.5  & 62.1\\
+Linear SLEM         & 57.5  & 64.1\\
+Gaussian SLEM       & 59    & 64.9\\
+Poly SLEM           & -     & 64.4\\
 \hline
 \end{tabular}
 \end{center}
@@ -122,40 +122,43 @@ Gaussian SLEM       & 59    & 64.9 & 45 (no cv) \\
 In this section we compare the time efficiency of our method and the E-SVM, as well as discuss which method to use accordingly with the number of positive and negative samples.
 
 We test both methods for $n=6000$ and $n=15000$ negative samples. It is important to note that, since ESVM is optimized by a stochastic gradient descent, its time calculation depends linearly on the number of iterations $T$ it takes to the cost function to converge. We follow the instructions of \cite{ZePe15} and set $T=10000$ for $n=6000$ and $T=100000$ for $n=15000$.
-\begin{figure}[!h]
-\centering
-\begin{subfigure}[b]{0.32\textwidth}
-\includegraphics[width=\textwidth]{speed_n_6K.png}
-\end{subfigure}
-\begin{subfigure}[b]{0.32\textwidth}
-\includegraphics[width=\textwidth]{speed_n_15K.png}
-\end{subfigure}
-\begin{subfigure}[b]{0.32\textwidth}
-\includegraphics[width=\textwidth]{speed_n.png}
-\end{subfigure}
-\caption{Comparison between time calculation feature encoding for different methods. At left, we use $n=6000$ negative examples. At right, $n=15000$ negative examples. In both experiments, we use VLAD as base features.}
-\label{time:scalar}
-\end{figure}
-Figure \ref{time:scalar} show how SLEM and ESVM scale for different number of images. Time calculation for ESVM increases linearly with the 
+%\begin{figure}[!h]
+%\centering
+%\begin{subfigure}[b]{0.32\textwidth}
+%\includegraphics[width=\textwidth]{speed_n_6K.png}
+%\end{subfigure}
+%\begin{subfigure}[b]{0.32\textwidth}
+%\includegraphics[width=\textwidth]{speed_n_15K.png}
+%\end{subfigure}
+%\begin{subfigure}[b]{0.32\textwidth}
+%\includegraphics[width=\textwidth]{speed_n.png}
+%\end{subfigure}
+%\caption{Comparison between time calculation feature encoding for different methods. At left, we use $n=6000$ negative examples. At right, $n=15000$ negative examples. In both experiments, we use VLAD as base features.}
+%\label{time:scalar}
+%\end{figure}
+%Figure \ref{time:scalar} show how SLEM and ESVM scale for different number of images. Time calculation for ESVM increases linearly with the 
+
+\input{figuren.tex}
 
 \subsection{Low-rank decomposition evaluation}
 
-\begin{figure}[!h]
-\centering
-\begin{subfigure}[b]{0.48\textwidth}
-\includegraphics[width=\textwidth]{linear_decomposition_nolog.png}
-\end{subfigure}
-\begin{subfigure}[b]{0.48\textwidth}
-\includegraphics[width=\textwidth]{rbf_decomposition_nolog.png}
-\end{subfigure}
-\caption{Comparison between full rank and low rank. In blue, mAP results for full rank SLEM. In red, mAP results for low rank decomposition of SLEM, varying the rank $r'$.
-At the left, linear SLEM results;at the right, Gaussian SLEM results. In this experiment, $n=10281$.}
-\label{no.ker.vs.linear2}
-\end{figure}
+%\begin{figure}[!h]
+%\centering
+%\begin{subfigure}[b]{0.48\textwidth}
+%\includegraphics[width=\textwidth]{linear_decomposition_nolog.png}
+%\end{subfigure}
+%\begin{subfigure}[b]{0.48\textwidth}
+%\includegraphics[width=\textwidth]{rbf_decomposition_nolog.png}
+%\end{subfigure}
+%\caption{Comparison between full rank and low rank. In blue, mAP results for full rank SLEM. %In red, mAP results for low rank decomposition of SLEM, varying the rank $r'$.
+%At the left, linear SLEM results;at the right, Gaussian SLEM results. In this experiment, $n=10281$.}
+%\label{no.ker.vs.linear2}
+%\end{figure}
 
 \subsection{Recursive SLEM}
 %\caption{Comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. }
 
 %\caption{Comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. }
+
 
 
