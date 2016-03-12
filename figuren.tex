@@ -2,7 +2,8 @@
 \begin{tikzpicture}
 	\begin{axis}[
 		xlabel=Number of negative samples,
-		ylabel=mAP]
+		ylabel=mAP,
+                legend pos=south east]
 %% Poly SLEM
 	\addplot[PolySLEM] coordinates {
 		(500,  0.78852)
@@ -65,9 +66,10 @@
 \end{tikzpicture}
 
 \begin{tikzpicture}
-	\begin{axis}[
+	\begin{semilogyaxis}[
 		xlabel=Number of negative samples,
-		ylabel=Time of calculation per positive image]
+		ylabel=Time of calculation per positive image,
+                legend pos=south east]
 %% Poly SLEM
 	\addplot[PolySLEM] coordinates {
 		(500,  0.0001)
@@ -125,6 +127,11 @@
 		(14500,0.028)
 	};
         \addlegendentry{ESVM}
-	\end{axis}
+	\end{semilogyaxis}
 \end{tikzpicture}
 
+
+
+%%% Local Variables:
+%%% TeX-master: "main_eccv"
+%%% End:
