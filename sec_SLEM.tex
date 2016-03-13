@@ -5,11 +5,9 @@ Given base features in $\RR^d$ at training time, one positive example $x_0$ in $
 Any feature vector representation can be used.
 We are also given a loss function $l:\{-1, 1\}\times \RR\rightarrow\RR^+$. Learning an E-SVM from these examples amounts to minimizing the function 
 \begin{equation}
-J(\omega, \nu) = \theta \ l(1, \omega^Tx_0+\nu) +\dfrac{1}{n}\sumi l(-1, \omega^T x_i+\nu)+\dfrac{\lambda}{2}|\!|\omega|\!|^2, \label{eq:first}
+J(\omega, \nu) = \theta \ l(1, \omega^Tx_0+\nu) +\dfrac{1}{n}\sumi l(-1, \omega^T x_i+\nu)+\dfrac{\lambda}{2}\|\omega\|^2, \label{eq:first}
 \end{equation}
-w.r.t. $\omega$ in $\RR^d$ and $\nu$ in $\RR$.
-
-In Equation (\ref{eq:first}), $\lambda$ and $\theta$ are respectively a regularization parameter on $\omega$ and a positive scalar adjusting the weight of the positive exemplar.
+w.r.t. $\omega$ in $\RR^d$ and $\nu$ in $\RR$. In Equation (\ref{eq:first}), $\lambda$ and $\theta$ are respectively a regularization parameter on $\omega$ and a positive scalar adjusting the weight of the positive exemplar.
 %\footnote{We could also acknowledge a parameter $\theta$ other than $\frac{1}{n}$ as a regularization to the error of each negative example. But this parameters seems to be less important to cross-validate. Also, setting $\theta=\frac{1}{n}$ simplify Equation (\ref{omega:solution}) and allows the use of Woodbury identity.} 
 
 The  exemplar SVM of $x_0$ with respect to $X$ is the classifier $\omega^\star(x_0,X)$ that minimizes the loss function $J$:
