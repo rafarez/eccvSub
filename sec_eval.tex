@@ -32,7 +32,7 @@ well known reproducing kernel, used for classification with support vector machi
 
 
 \subsection{Base visual features}
-We test our feature encoder for two different base features $x\in\mathbb{R}^d$, one hand-crafted image representation and one learned from deep convolutional neural networks.
+We test our feature encoder for three different base features $x\in\mathbb{R}^d$, one hand-crafted image representation and two learned from deep convolutional neural networks.
 
 
 We revisit the VLAD feature presented in \cite{VLAD} as an example of a hand-crafted representation. First we extract a set $\mathcal{F}$ of local descriptors of the image $I$. We use the 128 dimension RootSIFT \cite{3things} descriptors, extracted densely. 
@@ -51,7 +51,7 @@ The final VLAD representation is the power-normalization and $l_2$ normalization
 with scalar power normalization $\mathrm{power}(v)=\mathrm{sign}(v)|v|^{0.5}$ applied component-wise.
 In experiments, we use $K=64$ codewords learned on images from Flickr. Our VLAD representation has $d=8192$ dimensions.
 
-Convolutional features obtained from very deep convolutional neural networks (CNNs)have been shown to work as good local descriptors for matching \cite{SimonZisser15}. The SPoC representation \cite{babenko15} is a weighted sum-pooling of the activations of the last convolutional layer of a 19-layer CNN. For a given input image $I$, the activations in this layer are organized over a $W\times H$ spatial grid and over $d$ channels. Each position $(w,h)\in \{1 \cdots W\}\times \{1\cdots H\}$ can thus be equipped with a descriptor $f_{h,w}(I)\in\RR^D$. 
+Convolutional features obtained from very deep convolutional neural networks (CNNs) have been shown to work as good local descriptors for matching \cite{SimonZisser15}. The SPoC representation \cite{babenko15} is a weighted sum-pooling of the activations of the last convolutional layer of a 19-layer CNN. For a given input image $I$, the activations in this layer are organized over a $W\times H$ spatial grid and over $d$ channels. Each position $(w,h)\in \{1 \cdots W\}\times \{1\cdots H\}$ can thus be equipped with a descriptor $f_{h,w}(I)\in\RR^D$. 
 %Indeed, if our last convolutional layer has $D$ neurons, and each neuron a $W\times H$ map of activations of this neurons to the image $I$, 
 %each pair $(w,h)$ with $w$ in $\{1,2,..., W\}$ and $h$ in $\{1,2,...,H\}$ can be associated to a descriptor $f_{(h,w)}$ in $\RR^D$ of the responses of each neuron at coordinate $(w,h)$ of the maps. 
 We then sum-pool these descriptors, weighted accordingly to their distance to the center of the image:
@@ -64,34 +64,42 @@ where
 \end{equation}
 In our experiments, we follow the implementation details of \cite{babenko15}: We resize all images to $586\times 586$ pixels before feeding them to the network. The last convolutional layer has $d=512$ channels with activation maps of size $(W,H)=(37,37)$. We also set $\sigma=\frac{H}{3}$.
 
+Finally, we also test a more convencional CNN feature, less deep and using two fully connected layers after the convolutional layers. 
+Our final representation is a $4096$ non-negative feature. We based out implementation on CAFFE \ref{jia2014caffe}.
+
+
 \subsection{Implementation details}
 We cross validate $\gamma$ and $\lambda$ for Poly and Gaussian SLEM. to be completed
 
 
 \subsection{Full rank results}
-We test our method against the established ESVM and LDA. The interest in LDA ....
-Linear SLEM performs similarly to ESVM despite being much more time efficient (see discussion in section \ref{time-scale}). Gaussian SLEM and Polynomial SLEM outperform all methods, for all datasets and all image representations. 
+
+We test our method against the established ESVM and PCA. 
+\cite{babenko15} improves the retrieval results of SPoC by applying a PCA compression followed by whitening. In our experiments, the compression worsen the results when compared with non-compressed.
+Hence we compare the improvements of PCA plus whitening, without compression, with our method.
+Linear SLEM performs similarly to ESVM despite being much more time efficient (see discussion in section \ref{time-scale}). 
+Gaussian SLEM and Polynomial SLEM outperform all methods, for all datasets and all image representations. 
 The results are presented in Table \ref{fullrank:results}.
 
 \begin{table*}[t]
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|c|}
+\caption{Mean average precision results for INRIA Holidays and Oxford buildings datasets, expressed as percentages. In this table, we present our results for VLAD-64 \ref{VLAD}, sum-pooling of convolutional features (SPoC) \ref{babenko15} and fully connected (fc) CNN \ref{jia2014caffe}}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-Dataset & \multicolumn{2}{|c|}{\textbf{Holidays}} & \multicolumn{2}{|c|}{\textbf{Oxford 5k}}\\
+Dataset & \multicolumn{3}{|c|}{\textbf{Holidays}} & \multicolumn{3}{|c|}{\textbf{Oxford 5k}}\\
 \hline
-Method, features & VLAD-64 \cite{VLAD} & SPoC CNN \cite{babenko15} & VLAD-64 & SPoC CNN \\
+Method, features & VLAD-64  & SPoC CNN & FC CNN & VLAD-64 & SPoC CNN & FC CNN\\
 \hline\hline
-Baseline            & 72.7  & 73.1 & 46.3 & 54.4\\
+Baseline            & 72.7 & 73.1 & 68.2  & 46.3 & 54.4 & 40.6\\
 %Whitening           & -    & -    & -    & -    & -\\
-LDA                 & 69.4 & 77.5 & 50.9  & 63.7\\
-E-SVM               & 77.5 & 79.9 & 57.5  & 62.1\\
-Linear SLEM         & 78   & 78.3 & 57.5  & 64.1\\
-Gaussian SLEM       & 78.1 & 81.4 & 59    & 64.9\\
-Poly SLEM           & 78.1 &  82  & 59.3  & 64.8\\
+PCA+whitening       & 69.4 & 77.5 & 69.2 & 50.9  & 63.7 & 45 \\
+E-SVM               & 78.3 & 79.9 & 71.8 & 57.5  & 62.1 & 44.6\\
+Linear SLEM         & 78   & 78.3 & 72.1 & 57.5  & 64.1 & 45.5\\
+Gaussian SLEM       & 78.1 & 81.4 & 72.9 & 59    & 64.9 & 46.1\\
+Poly SLEM           & 78.1 &  82  & 72.9 & 59.3  & 64.8 & 46\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Mean average precision results for INRIA Holidays and Oxford buildings datasets, expressed as percentages.}
 \label{fullrank:results}
 \end{table*}
 
