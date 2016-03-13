@@ -64,80 +64,44 @@ where
 In this paper, we follow the implementation details of \cite{babenko15}: We resize all images to $586\times 586$ pixels before forwarding them to the network. As such, the last convolutional layer has 512 neurons and each neuron has an activation map where $W=37$ and $H=37$. We also set $\sigma=\frac{H}{3}$.
 
 \subsection{Implementation details}
-\emph{\color{red} Not relevant right now.  To be written.}
-$8192$ dimensional VLAD features.
-
-E-SVM: $0.6$ second to solve one single exemplar.
-
-SLEM: $30$ seconds to solve a $8192\times 8192$ linear system for all exemplars of the dataset.
-
-Kernelized SLEM: at most $0.3$ seconds (for RBF kernel) for each iteration of (\ref{icd:algo}) algorithm plus at most $30$ seconds to solve a $r'\times r'$ system.
+We cross validate $\gamma$ and $\lambda$ for Poly and Gaussian SLEM. to be completed
 
 
 \subsection{Full rank results}
-
-\textbf{\emph{Holidays} and \emph{Oxford 5k} results}
+We test our method against the established ESVM and LDA. The interest in LDA ....
+Linear SLEM performs similarly to ESVM despite being much more time efficient (see discussion in section \ref{time-scale}). Gaussian SLEM and Polynomial SLEM outperform all methods, for all datasets and all image representations. 
+The results are presented in Table \ref{fullrank:results}.
 
 \begin{table*}[t]
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Method, features & VLAD-64 \cite{VLAD}& SPoC CNN \cite{babenko15}  \\
+Dataset & \multicolumn{2}{|c|}{\textbf{Holidays}} & \multicolumn{2}{|c|}{\textbf{Oxford 5k}}\\
+\hline
+Method, features & VLAD-64 \cite{VLAD} & SPoC CNN \cite{babenko15} & VLAD-64 & SPoC CNN \\
 \hline\hline
-Baseline            & 72.7  & 73.1 \\
+Baseline            & 72.7  & 73.1 & 46.3 & 54.4\\
 %Whitening           & -    & -    & -    & -    & -\\
-LDA                 & 69.4 & 77.5 \\
-E-SVM               & 77.5 & 79.8 \\
-Linear SLEM         & 78   & 78.3 \\
-Gaussian SLEM       & 78.1 & 81.4 \\
-Poly SLEM           & 78.1 &  82  \\
+LDA                 & 69.4 & 77.5 & 50.9  & 63.7\\
+E-SVM               & 77.5 & 79.9 & 57.5  & 62.1\\
+Linear SLEM         & 78   & 78.3 & 57.5  & 64.1\\
+Gaussian SLEM       & 78.1 & 81.4 & 59    & 64.9\\
+Poly SLEM           & 78.1 &  82  & 59.3  & 64.8\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Mean average precision results for INRIA Holidays dataset, expressed as percentages. The - means the tests can not be performed or was not performed yet.}
+\caption{Mean average precision results for INRIA Holidays and Oxford buildings datasets, expressed as percentages.}
+\label{fullrank:results}
 \end{table*}
-
-
-\begin{table*}[t]
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-Method, features & VLAD-64 \cite{VLAD} & SPoC CNN \cite{babenko15} \\
-\hline\hline
-Baseline            & 46.3 & 54.4 \\
-%Whitening           & 07   & 20.2 & - & -    & -\\
-LDA                 & 50.9 & 63.7 \\
-E-SVM               & 57.5  & 62.1\\
-Linear SLEM         & 57.5  & 64.1\\
-Gaussian SLEM       & 59    & 64.9\\
-Poly SLEM           & -     & 64.4\\
-\hline
-\end{tabular}
-\end{center}
-\caption{Mean average precision results for Oxford 5k buildings dataset, expressed as percentages. The - means the tests can not be performed or was not performed yet.}
-\end{table*}
-
 
 \subsection{Time Scalability} \label{time-scale}
 In this section we compare the time efficiency of our method and the E-SVM, as well as discuss which method to use accordingly with the number of positive and negative samples.
 
-We test both methods for $n=6000$ and $n=15000$ negative samples. It is important to note that, since ESVM is optimized by a stochastic gradient descent, its time calculation depends linearly on the number of iterations $T$ it takes to the cost function to converge. We follow the instructions of \cite{ZePe15} and set $T=10000$ for $n=6000$ and $T=100000$ for $n=15000$.
-%\begin{figure}[!h]
-%\centering
-%\begin{subfigure}[b]{0.32\textwidth}
-%\includegraphics[width=\textwidth]{speed_n_6K.png}
-%\end{subfigure}
-%\begin{subfigure}[b]{0.32\textwidth}
-%\includegraphics[width=\textwidth]{speed_n_15K.png}
-%\end{subfigure}
-%\begin{subfigure}[b]{0.32\textwidth}
-%\includegraphics[width=\textwidth]{speed_n.png}
-%\end{subfigure}
-%\caption{Comparison between time calculation feature encoding for different methods. At left, we use $n=6000$ negative examples. At right, $n=15000$ negative examples. In both experiments, we use VLAD as base features.}
-%\label{time:scalar}
-%\end{figure}
-%Figure \ref{time:scalar} show how SLEM and ESVM scale for different number of images. Time calculation for ESVM increases linearly with the 
-
+In Figure \ref{fullrank:results}, we see Linear SLEM efficiency does not change with $n$. 
+Indeed, if $d$ is the dimension of the base representation, $A$ is a $d\times d$ matrix for Linear SLEM, whereas for a full rank kernel, $A$ is a $n\times n$. 
+This explain the increasing running time for Gaussian and polynomial kernels: storage and solving a $n\times n$ system does not scale for large number of negative samples. 
+But retrieval results in Figure \ref{fullrank:results} suggest we can benefit from larger sets of negative samples. Linear SLEM and ESVM scales well, but do not perform so well. 
+\vspace{3 mm}
 \input{figuren.tex}
 
 \subsection{Low-rank decomposition evaluation}
@@ -155,10 +119,39 @@ We test both methods for $n=6000$ and $n=15000$ negative samples. It is importan
 %\label{no.ker.vs.linear2}
 %\end{figure}
 
-\subsection{Recursive SLEM}
-%\caption{Comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. }
 
-%\caption{Comparison between no kernel results and linear kernel results. In black, mAP of non kernelized SLEM. In red, mAP for different low-rank decompositions of linear kernel matrix. In this experiment, $r=2^{13}$ and we set $\log_2 r'$ in $\{6, 7,...,13\}$. }
+ubsection{Spatial pyramid matching kernel}
 
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    Dataset & \multicolumn{2}{|c|}{\textbf{Holidays}} & \multicolumn{2}{|c|}{\textbf{Oxford 5k}}\\
+    \hline
+        Method, feaures & RootSIFT & CNN & RootSIFT
+        &CNN \\
+    \hline
+    \hline
+        SP SLEM & 66.9 & 70.2 & 42.4 & 45 \\
+    \hline
+    \end{tabular}
+    \caption{Results }
+    \label{tab:spk}
+\end{table}
+All previous kernel functions take as input image representations in a fixed sized vectorial space. In this section, we propose using the spatial pyramid kernel \cite{GrauDa05}, that takes as input a set of local descriptors and its coordinates in the image.
 
+We revisit the spatial pyramid scheme presented in \cite{spk} using the generalized intersection function of histograms. 
+
+Let $X$, $Y$ be the sets of local descriptors of a pair of images. 
+These local descriptors can be associated to one of $M$ codewords $\{c_1,c_2,...,c_M\}$, so that $X=\bigcup_{1\leq m \leq M}X_m$ and $Y=\bigcup_{1\leq m \leq M}Y_m$, so that $X_m$, $Y_m$ are the set of descriptors associated to $c_m$. 
+For level $l$ in $\{0,1,..., L\}$, we divide the images in grids $2^l\times 2^l$ and we call $H^{(l,m)}_X$, $H^{(l,m)}_Y$ the $4^l$-dimensional histograms of the occurrences of the of the visual word $c_m$ in each bin of the grid. 
+The kernel $K_{sp}(X,Y)$ is given by sum over all codewords of the intersection histogram of $H^{(l,m)}_X$ and $H^{(l,m)}_Y$, $l=0,...,L$,  weighted proportionally to the number of bins in each level.
+
+We test this kernel for RootSIFT extracted in multiscales, as used in \cite{spk}, and learn the codewords with K-means. Inspired by the results of \cite{SPPCNN}, we also test it for activations of the last convolutional layer of the network of \cite{SimonZisser15}. Each neuron of the last layer correspont to a codeword. The results are presented in Table \ref{tab:spk}.
+%The spatial pyramid kernel is given by
+%\begin{align}
+%    K_{sp}(X,Y) &= \sum_{m=1}^M \kappa^L(X_m, Y_m), \ where \\
+%    \kappa^L(X_m,Y_m) &= 2^{-L}I^{l}(X_m,Y_m) +\sum_{l=1}^L 2^{-L+l-1}I^{l}(X_m,Y_m) \label{kappa}\\
+%    I^{l}(X_m,Y_m) = \sum_{i=1}^{4^l}\min()
+%\end{align}
 

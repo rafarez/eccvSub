@@ -68,39 +68,36 @@ Indeed, if $\omega$ and $\omega'$ are the $d$-dimensional SLEM vectors of $x$ an
 s(\omega, \omega') = \dfrac{\omega^T \omega'}{\|\omega\| \|\omega'\|} = \frac{(x-\mu)^TA^{-2}(x'-\mu)}{\|A^{-1}(x-\mu)\|\|A^{-1}(x'-\mu)\|},\label{match:score}
 \end{equation}
 which does not depend on the value of $\theta$. This means that the weight of the positive sample can be fixed at any positive value without changing matching scores. This sets the SLEM appart from E-SVM that requires this parameter to be cross validated \cite{Efros11, ZePe15}.
-\subsection{LDA and SLEM}
 
-Let us now reanalyse the SLEM problem and suppose that we have multiple positive samples. It can be shown that in this case, the corresponding linear classifier of Equation (\ref{eq:first}) for the square-loss is also given by
-(\ref{omega:solution}), where $x_0$ denotes this time the center of mass
-of the positive samples, {\em if} these samples have the {\em same} covariance matrix $\Sigma$ as the negative samples $X$.
- 
-This equal-covariance assumption is of course quite restrictive, and
-probably unrealistic in general. It is interesting to note, however,
-that this is exactly the assumption made by linear discriminant
-analysis. As shown in~\cite{Hastie2009} for example, LDA can be seen as a
-(non-regularized) linear classifier
-with decision function $\omega^T z+ b'$, where $z$ is a sample in
-$\RR^d$, and
-\begin{equation}
-\left\{\begin{array}{l}
-\displaystyle \omega'=\Sigma^{-1}(x_0-\mu),\\
-\displaystyle b'=-\frac{1}{2}(x_0+\mu)^T \omega',
-\end{array}\right.
-\label{eq:lda}
-\end{equation}
- 
-Note that when $\lambda=0$ in SLEM (no regularization),
-\begin{align}
-\Sigma \omega & = U\omega -\frac{1}{2}[(x_0-\mu)^T \omega] (x_0-\mu) =
-\left[1-\frac{1}{2}(x_0-\mu)^T \omega\right](x_0-\mu) \\
-&=\left[1-\frac{1}{2}(x_0-\mu)^T \omega\right]\Sigma \omega'
-\end{align}
-thus $\omega$ and $\omega'$ have the same direction \PP{Not sure to get it. What is $\omega$ here? $\omega^{\star}$? Also it says that $\Sigma \omega$ and $\Sigma \omega'$ are aligned, not $\omega$ and $\omega'$.}.\RAF{This subsection is not particularly important, and can be removed if it is deemed innecessary.} In other words, a
-SLEM is a generalized version of LDA when the
-regularizer parameter $\lambda $ is zero.
-This observation has been equally made by \cite{Koba15}\PP{For square loss e-svm as well?}\RAF{Yes, he briefly studied the E-SVM with square-loss}.
+\RAF{I cut the LDA and SLEM section, too long and but particularly useful}
+%\subsection{LDA and SLEM}
 
-Many interesting properties of LDA has been rediscovered for classification tasks \cite{GMPD12,HMR12} and, more recently, for image retrieval with non-embedded image encoders \cite{babenko15}.
+%Let us now reanalyse the SLEM problem and suppose that we have multiple positive samples. It can be shown that in this case, the corresponding linear classifier of Equation (\ref{eq:first}) for the square-loss is also given by
+%(\ref{omega:solution}), where $x_0$ denotes this time the center of mass
+%of the positive samples, {\em if} these samples have the {\em same} covariance matrix $\Sigma$ as the negative samples $X$.
+ 
+%This equal-covariance assumption is of course quite restrictive, and probably unrealistic in general. It is interesting to note, however, that this is exactly the assumption made by linear discriminant analysis. As shown in~\cite{Hastie2009} for example, LDA can be seen as a (non-regularized) linear classifier with decision function $\omega^T z+ b'$, where $z$ is a sample in
+%$\RR^d$, and
+%\begin{equation}
+%\left\{\begin{array}{l}
+%\displaystyle \omega'=\Sigma^{-1}(x_0-\mu),\\
+%\displaystyle b'=-\frac{1}{2}(x_0+\mu)^T \omega',
+%\end{array}\right.
+%\label{eq:lda}
+%\end{equation}
+ 
+%Note that when $\lambda=0$ in SLEM (no regularization),
+%\begin{align}
+%\Sigma \omega & = U\omega -\frac{1}{2}[(x_0-\mu)^T \omega] (x_0-\mu) =
+%\left[1-\frac{1}{2}(x_0-\mu)^T \omega\right](x_0-\mu) \\
+%&=\left[1-\frac{1}{2}(x_0-\mu)^T \omega\right]\Sigma \omega'
+%\end{align}
+%thus $\omega$ and $\omega'$ have the same direction \PP{Not sure to get it. What is $\omega$ here? $\omega^{\star}$? Also it says that $\Sigma \omega$ and $\Sigma \omega'$ are aligned, not $\omega$ and $\omega'$.}.\RAF{This subsection is not particularly important, and can be removed if it is deemed innecessary.} In other words, a
+%SLEM is a generalized version of LDA when the
+%regularizer parameter $\lambda $ is zero.
+%This observation has been equally made by \cite{Koba15}\PP{For square loss e-svm as well?}\RAF{Yes, he briefly studied the E-SVM with square-loss}.
+
+%Many interesting properties of LDA has been rediscovered for classification tasks \cite{GMPD12,HMR12} and, more recently, for image retrieval with non-embedded image encoders \cite{babenko15}.
 
 
 
