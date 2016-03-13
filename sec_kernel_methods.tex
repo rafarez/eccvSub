@@ -115,8 +115,12 @@ Indeed, the corresponding vector $\alpha$ (or, more correctly, \textit{a} corres
 \begin{equation}
 \begin{bmatrix} \alpha_0 \\ \hat{\alpha} \end{bmatrix} = \begin{bmatrix} \frac{1}{u} & 0^T \\-\frac{1}{u}Pv & P  \end{bmatrix} \begin{bmatrix}\beta_0 \\ \hat{\beta} \end{bmatrix},
 \end{equation}
-for $P$ pseudoinverse of $B^T$, $\alpha_0$ and $\beta_0$ scalars.
-Inspired by the matching score of \cite{ZePe15}, the matching score $s(h,h')$ of $h$ and any $h'=\alpha_0'\varphi(x_0')+\sum_{i=1}^n \alpha_i'\varphi (x_i)+\nu'$ in $H$, the representation of another image $x_0'$, is given by \PP{So, biases $\nu$ and $\nu'$ are ignored?}\RAF{Yes, adding it to the classifier does not change the results in a significant way.} 
+for $P$ pseudoinverse of $B^T$, $\alpha_0$ and $\beta_0$ scalars. The kernalized SLEM of base feature $x_0$ finally reads:
+\begin{equation}
+h =\alpha_0 \varphi(x_0)+\sum_{i=1}^n \alpha_i \varphi (x_i)+\nu \in H.
+\end{equation}
+Inspired by the matching score of \cite{ZePe15}, the matching score $s(h,h')$ between $h$ and the encoding $h'=\alpha_0'\varphi(x_0')+\sum_{i=1}^n \alpha_i'\varphi (x_i)+\nu'$ of an other image $x_0'$, is given by (ignoring bias $\nu$ and $\nu'$ which have empirically no influence): 
+%\PP{So, biases $\nu$ and $\nu'$ are ignored?}\RAF{Yes, adding it to the classifier does not change the results in a significant way.} 
 \begin{equation}
 \begin{split}
 s(h,h') & = \langle h, h'\rangle \\
