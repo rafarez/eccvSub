@@ -1,7 +1,7 @@
 \section{Square loss exemplar machine}\label{lsesvm}
 In this section, we revisit the exemplar SVM model as presented by \cite{Efros11} and introduce its square loss version.
 \subsection{Exemplar SVMs} \label{esvm}
-Given features in $\RR^d$ at training time, one positive example $x_0$ in $\RR^d$ and a set of negative examples $X = [x_1, x_2,...,x_n]$ in $\RR^{d\times n}$, each column of $X$ representing one example by a vector in $\RR^d$. 
+Given base features in $\RR^d$ at training time, one positive example $x_0$ in $\RR^d$ and a set of negative examples $X = [x_1, x_2,...,x_n]$ in $\RR^{d\times n}$, each column of $X$ representing one example by a vector in $\RR^d$. 
 Any feature vector representation can be used.
 We are also given a loss function $l:\{-1, 1\}\times \RR\rightarrow\RR^+$. Learning an E-SVM from these examples amounts to minimizing the function 
 \begin{equation}
