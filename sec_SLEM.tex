@@ -38,13 +38,13 @@ However, differently from the hinge loss, it is now a ridge regression problem, 
 where:
 \begin{align}
 &\mu = \frac{1}{n}\sum_{i=1}^n x_i,\\
-&U = \dfrac{1}{n}XX^T-\mu\mu^T+\dfrac{\theta}{\theta+1}(x_0-\mu)(x_0-\mu)^T+\lambda\textbf{Id}_d. \label{eq:U}
+&U = \dfrac{1}{n}XX^T-\mu\mu^T+\dfrac{\theta}{\theta+1}(x_0-\mu)(x_0-\mu)^T+\lambda\mathrm{Id}_d. \label{eq:U}
 \end{align}
 Equation \ref{omega:solution} shows how to solve (\ref{eq:first}) in a closed form to obtain the SLEM vector $\omega^\star(x_0,X)$ of $x_0$. 
 Replacing the hinge loss by the squared loss offers a more compact solution, but not necessarily more efficient.
 
 \subsection{Woodbury identity and matching scores}
-Let us define $A = \frac{1}{n}XX^T-\mu\mu^T +\lambda\textbf{Id}_d$ and assume $A^{-1}$ known. 
+Let us define $A = \frac{1}{n}XX^T-\mu\mu^T +\lambda\mathrm{Id}_d$ and assume $A^{-1}$ known. 
 %$A$ is the covariance matrix of the negative samples $X$\footnote{added of a small term proportional to the identity matrix to insure $A$ is positive-definite.}. Let us assume its inverse $A^{-1}$ is known. 
 Matrix $U$ now reads $U = A + \frac{\theta}{\theta+1}\delta\delta^T$, where $\delta=x_0-\mu$. The Woodbury identity \cite{woodbury} gives us
 \begin{equation}
