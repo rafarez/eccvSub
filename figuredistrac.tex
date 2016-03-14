@@ -6,14 +6,17 @@
 		ylabel=mAP,
 		legend = south west]
 %%Poly SLEM
-	\addplot[PolySLEM] coordinates{
-        (   0, 0.5896)
-        (1000, 0.5885)
-        (3000, 0.5868)
-        (6000, 0.5848)
-       (10000, 0.5831)
-       (30000, 0.5720)
-       
+    \addplot[PolySLEM] coordinates{
+        (   0, 0.5929)
+        (1000, 0.5918)
+        (3000, 0.5901)
+        (6000, 0.5881)
+       (10000, 0.5864)
+       (30000, 0.5759)
+       (60000, 0.5663)
+      (100000, 0.5598)
+      (300000, 0.5405)
+      (600000, 0.5310)
     };
     \addlegendentry{PolySLEM}
 	\addplot[ESVM] coordinates{
@@ -29,19 +32,19 @@
       (600000, 0.5121)
     };	
     \addlegendentry{RESVM-2}
-%    \addplot[VLAD] coordinates{
-%        (   0, 0.463)
-%        (1000, 0.4611)
-%        (3000, 0.4585)
-%        (6000, 0.4558)
-%       (10000, 0.4534)
-%       (30000, 0.4443)
-%       (60000, 0.4372)
-%      (100000, 0.4322)
-%      (300000, 0.4170)
-%      (600000, 0.4050)
-%    };
-    \addlegendentry{VLAD}
+    %\addplot[VLAD] coordinates{
+    %    (   0, 0.463)
+    %    (1000, 0.4611)
+    %    (3000, 0.4585)
+    %    (6000, 0.4558)
+    %   (10000, 0.4534)
+    %   (30000, 0.4443)
+    %   (60000, 0.4372)
+    %  (100000, 0.4322)
+    %  (300000, 0.4170)
+    %  (600000, 0.4050)
+    %};
+    %\addlegendentry{VLAD}
     \addplot[LinSLEM] coordinates{
         (   0, 0.5933)
         (1000, 0.5922)
@@ -50,9 +53,9 @@
        (10000, 0.5860)
        (30000, 0.5751)
        (60000, 0.5643)
-      %(100000, 0.4322)
-      %(300000, 0.4170)
-      %(600000, 0.4050)
+      (100000, 0.5588)
+      (300000, 0.5385)
+      (600000, 0.5260)
     };
     \addlegendentry{LinSLEM}
 	\end{semilogxaxis}
@@ -60,4 +63,5 @@
 \caption{mAP for Oxford 5k varying the number of distractors, using SPoC features and different methods of SLEM (see legend).}
 \label{vlad:oxford}
 \end{figure}
+
 
