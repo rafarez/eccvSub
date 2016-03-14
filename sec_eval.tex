@@ -24,12 +24,12 @@ As stated in section \ref{low-rank} and further discussed in section \ref{time-s
 
 
 \subsection{Which kernel to choose?}
-We tested three different kernels --linear, Gaussian, polynomial and Spatial Pyramid Matching (SPM) -- defined below:
+We tested four differnt kernels. The first three --linear, Gaussian, polynomial -- are defined below:
 \begin{align}
     &k_{linear}(x,y) = x^Ty, \label{k:lin}\\
     &k_{Gauss}(x,y) = \exp(-\gamma\|x-y \|^2), \label{k:rbf}\\
-    &k_{poly}(x,y) = x^Ty+\lambda(x^Ty)^2. \label{k:poly}\\
-    &k_{SPM}(x,y) = \dfrac{1}{2^L}\mathcal{I}(H^0_x, H^0_y) +\sum_{l=1}^L\dfrac{1}{2^{L-l+1}}\mathcal{I}(H^{l,\gamma}_x, H^{l,\gamma}_y). \label{k:spm}
+    &k_{poly}(x,y) = x^Ty+\lambda(x^Ty)^2. \label{k:poly}
+    %&k_{SPM}(x,y) = \dfrac{1}{2^L}\mathcal{I}(H^0_x, H^0_y) +\sum_{l=1}^L\dfrac{1}{2^{L-l+1}}\mathcal{I}(H^{l,\gamma}_x, H^{l,\gamma}_y). \label{k:spm}
 \end{align}
 %\JZ{We give results with spp, we should add it. Makes it clear that we use a wide range of kernels.}
 %\JZ{The text below could be removed. But some brief text for SPM is a good idea, as it is less standard. I think SPP and SPM are not the same thing... We should use SPM... SPP is a finite dimensional feature map.}
@@ -40,7 +40,9 @@ We tested three different kernels --linear, Gaussian, polynomial and Spatial Pyr
 % \textbf{Polynomial SLEM} The polynomial kernel of Equation (\ref{k:poly}) is a reproducing kernel often used in natural language processing.
 %\textbf{SPM SLEM} The spatial pyramid matching kernel of $L+1$ levels in Equation \ref{k:spm} take as input a set of local descriptors and its location in pyramidal bins \cite{spk}. 
 Note that Gaussian and polynomial kernels require a scalar parameter ($\gamma$ and $\lambda$, respectively), that we set using cross-validation \JZ{What is the cross-valid dataset?}.
-The SPM kernel of $L+1$ levels in Equation \eqref{k:spm} takes as input a set of local descriptors and computes a similarity score that takes into account their geometrical layout \cite{spk}.\JZ{Need to define $H_x^{l,\gamma}$ ...}
+
+Besides the three kernels above described, we likewise carry out experiments using the Spatial Pyramid Matchin (SPM) kernel.
+%The SPM kernel of $L+1$ levels in Equation \eqref{k:spm} takes as input a set of local descriptors and computes a similarity score that takes into account their geometrical layout \cite{spk}.\JZ{Need to define $H_x^{l,\gamma}$ ...}
 %its location in pyramidal bins \cite{spk}. 
 
 
@@ -92,7 +94,8 @@ The second CNN-based feature, the SPoC feature of \cite{babenko15}, is tailored 
 % \subsection{Implementation details}
 % We cross validate $\gamma$ and $\lambda$ for Poly and Gaussian SLEM.
 
-\subsection{Full rank results}
+%\subsection{Full rank results}
+\subsection{Comparison to other enhancement methods using various base features} \JZ{Renamed from ``Full rank results'', not too convinced myself... but if we don't have low-rank results...}
 In Table \ref{fullrank:results}, we test our method using the three recent base features discussed above (VLAD \cite{Delhumeau2013}, SPoC \cite{babenko15}, and FC-CNN \cite{Sharif}) and two datasets (6 combinations in total). We further compare against two feature enhancement strategies: {\it ( i)} the ESVM method of \cite{ZePe15}, as well as {\it ( ii)} the PCA+whitening strategy shown in \cite{babenko15} to drastically improve the retrieval results for SPoC. In our experiments, using PCA dimensionality reduction worsens the results, and hence we use the full PCA projection matrix for the PCA+whitening strategy.
 %Hence we compare the improvements of PCA plus whitening, without compression, with our method.
 
@@ -138,7 +141,7 @@ Note that linear SLEM enjoys a considerable computational advantage of close to 
 %In Figure \ref{fullrank:results}, we see that Linear SLEM efficiency does not change with $n$.
 %Indeed, if $d$ is the dimension of the base representation, $A$ is a $d\times d$ matrix for Linear SLEM, whereas for a full rank kernel, $A$ is a $n\times n$.
 
-The reason for the increased complexity for Gaussian and polynomial kernels follows since storing and solving a $n\times n$ system does not scale for large number of negative samples.
+%The reason for the increased complexity for Gaussian and polynomial kernels follows since storing and solving a $n\times n$ system does not scale for large number of negative samples.
 %But retrieval results in Figure \ref{fullrank:results} suggest we can benefit from larger sets of negative samples. %Linear SLEM and ESVM scales well, but do not perform so well.
 
 \vspace{3 mm}
@@ -165,7 +168,7 @@ The reason for the increased complexity for Gaussian and polynomial kernels foll
 
 \begin{table}[!h]
     \centering
-    \caption{Results for spatial pyramids kernel when compared with a Bag of Visual Words from the local descriptors}
+    \caption{Results for spatial pyramids kernel when compared with a Bag of Visual Words from the local descriptors \JZ{BoW to change to SPM} }
     \begin{tabular}{|c|c|c|c|c|}
     \hline
     Dataset & \multicolumn{2}{|c|}{\textbf{Holidays}} & \multicolumn{2}{|c|}{\textbf{Oxford 5k}}\\
