@@ -1,175 +1,441 @@
+\begin{figure}
+  \begin{tikzpicture}
+    \begin{groupplot}
+      [group style={%
+        columns=2,
+        rows=1,
+        group name=plots,
+        xlabels at=edge bottom,
+        %y descriptions at=all,
+        horizontal sep=5em,        
+      },
+      % ybar,
+      % ymin=0,
+      % ymax=27e3,
+      enlarge x limits={abs=.5},
+      width=0.5\textwidth,
+      height=0.4\textwidth,
+      % scaled y ticks=base 10:-3,
+      % xticklabels from table={\first}{Criterion},
+      % x tick label style={rotate=90,anchor=east},
+      % xtick=data,
+      ]
+
+      \nextgroupplot[xlabel=Num. of negatives,
+      ylabel=mAP]
+      ]
+      %% Poly SLEM
+      \addplot[PolySLEM] coordinates {
+        (500,  0.78852)
+        (1500, 0.80397)
+        (2500, 0.80648)
+        (3500, 0.80905)
+        (4500, 0.81192)
+        (5500, 0.81502)
+        (6500, 0.81659)
+        (7500, 0.81712)
+        (8500, 0.81599)
+        (9500, 0.81432)
+        (10500,0.81625)
+        (11500,0.81796)
+        (12500,0.81726)
+        (13500,0.81993)
+        (14500,0.82057)
+      };
+      %% Gaussian SLEM
+      \addplot[GaussSLEM] coordinates {
+        (500,  0.77757)
+        (1500, 0.79756)
+        (2500, 0.80338)
+        (3500, 0.79909)
+        (4500, 0.79950)
+        (5500, 0.80257)
+        (6500, 0.8016)
+        (7500, 0.80362)
+        (8500, 0.80377)
+        (9500, 0.80501)
+        (10500,0.80534)
+        (11500,0.80909)
+        (12500,0.80955)
+        (13500,0.80813)
+        (14500,0.81214)
+      };
+      %% ESVM
+      \addplot[ESVM] coordinates {
+        (500,  0.7684)
+        (1500, 0.78434)
+        (2500, 0.78836)
+        (3500, 0.78927)
+        (4500, 0.79292)
+        (5500, 0.79523)
+        (6500, 0.79491)
+        (7500, 0.79557)
+        (8500, 0.79915)
+        (9500, 0.79819)
+        (10500,0.79888)
+        (11500,0.7985)
+        (12500,0.79822)
+        (13500,0.79930)
+        (14500,0.79905)
+      };
+      %% Linear SLEM
+      \addplot[LinSLEM] coordinates {
+        (500,  0.77638)
+        (1500, 0.7748)
+        (2500, 0.77919)
+        (3500, 0.77914)
+        (4500, 0.7748)
+        (5500, 0.77578)
+        (6500, 0.77902)
+        (7500, 0.78338)
+        (8500, 0.78043)
+        (9500, 0.78026)
+        (10500,0.77803)
+        (11500,0.77767)
+        (12500,0.77818)
+        (13500,0.78148)
+        (14500,0.78254)
+      };
+
+      \nextgroupplot[
+      ymode=log,
+      xlabel=Num. of negatives,
+      ylabel=Time per image (s),
+      legend to name=grouplegend,
+      legend style={legend columns=-1},
+      % legend style={at={(0.465,-0.45)},
+      % anchor=north,legend columns=-1},
+      ]%
+      %% Poly SLEM
+      \addplot[PolySLEM] coordinates {
+        (500,  0.0001)
+        (1500, 0.0007)
+        (2500, 0.0023)
+        (3500, 0.0046)
+        (4500, 0.0088)
+        (5500, 0.0146)
+        (6500, 0.0213)
+        (7500, 0.0289)
+        (8500, 0.0395)
+        (9500, 0.0542)
+        (10500,0.0703)
+        (11500,0.0903)
+        (12500,0.1103)
+        (13500,0.1434)
+        (14500,0.1745)
+      };
+      \addlegendentry{Poly SLEM}
+      %% Gaussian SLEM
+      \addplot[GaussSLEM] coordinates {
+        (500,  0.0003)
+        (1500, 0.0008)
+        (2500, 0.0021)
+        (3500, 0.0044)
+        (4500, 0.0072)
+        (5500, 0.0119)
+        (6500, 0.0172)
+        (7500, 0.026)
+        (8500, 0.0344)
+        (9500, 0.0465)
+        (10500,0.0617)
+        (11500,0.0814)
+        (12500,0.1248)
+        (13500,0.1301)
+        (14500,0.161)
+      };
+      \addlegendentry{Gaussian SLEM}
+      %% ESVM
+      \addplot[ESVM] coordinates {
+        (500,  0.014)
+        (1500, 0.015)
+        (2500, 0.016)
+        (3500, 0.017)
+        (4500, 0.018)
+        (5500, 0.019)
+        (6500, 0.02)
+        (7500, 0.021)
+        (8500, 0.022)
+        (9500, 0.023)
+        (10500,0.024)
+        (11500,0.025)
+        (12500,0.026)
+        (13500,0.027)
+        (14500,0.028)
+      };
+      \addlegendentry{ESVM}
+      %% Linear SLEM
+      \addplot[LinSLEM] coordinates {
+        (500,  0.0000565)
+        (1500, 0.0000575)
+        (2500, 0.0000467)
+        (3500, 0.0000679)
+        (4500, 0.0000683)
+        (5500, 0.0000612)
+        (6500, 0.0000608)
+        (7500, 0.0000708)
+        (8500, 0.0000743)
+        (9500, 0.0000996)
+        (10500, 0.0000993)
+        (11500,0.0001073)
+        (12500,0.0001027)
+        (13500,0.000075)
+        (14500,0.0001141)
+      };
+      \addlegendentry{Linear SLEM}
+      
 
 
+    \end{groupplot}
 
-\begin{figure}[!h]
-\centering
-\begin{tikzpicture}
-	\begin{axis}[
-		xlabel=Number of negative samples,
-		ylabel=mAP]
-%% Poly SLEM
-	\addplot[PolySLEM] coordinates {
-		(500,  0.78852)
-		(1500, 0.80397)
-		(2500, 0.80648)
-		(3500, 0.80905)
-		(4500, 0.81192)
-		(5500, 0.81502)
-		(6500, 0.81659)
-		(7500, 0.81712)
-		(8500, 0.81599)
-		(9500, 0.81432)
-		(10500,0.81625)
-		(11500,0.81796)
-		(12500,0.81726)
-		(13500,0.81993)
-		(14500,0.82057)
-	};
-%% Gaussian SLEM
-	\addplot[GaussSLEM] coordinates {
-		(500,  0.77757)
-		(1500, 0.79756)
-		(2500, 0.80338)
-		(3500, 0.79909)
-		(4500, 0.79950)
-		(5500, 0.80257)
-		(6500, 0.8016)
-		(7500, 0.80362)
-		(8500, 0.80377)
-		(9500, 0.80501)
-		(10500,0.80534)
-		(11500,0.80909)
-		(12500,0.80955)
-		(13500,0.80813)
-		(14500,0.81214)
-	};
-%% ESVM
-	\addplot[ESVM] coordinates {
-		(500,  0.7684)
-		(1500, 0.78434)
-		(2500, 0.78836)
-		(3500, 0.78927)
-		(4500, 0.79292)
-		(5500, 0.79523)
-		(6500, 0.79491)
-		(7500, 0.79557)
-		(8500, 0.79915)
-		(9500, 0.79819)
-		(10500,0.79888)
-		(11500,0.7985)
-		(12500,0.79822)
-		(13500,0.79930)
-		(14500,0.79905)
-	};
-%% Linear SLEM
-    \addplot[LinSLEM] coordinates {
-		(500,  0.77638)
-		(1500, 0.7748)
-		(2500, 0.77919)
-		(3500, 0.77914)
-		(4500, 0.7748)
-		(5500, 0.77578)
-		(6500, 0.77902)
-		(7500, 0.78338)
-		(8500, 0.78043)
-		(9500, 0.78026)
-		(10500,0.77803)
-		(11500,0.77767)
-		(12500,0.77818)
-		(13500,0.78148)
-		(14500,0.78254)
-	};
-	\end{axis}
-\end{tikzpicture}
+    \node at (plots c1r1.north east) [anchor=south, xshift=2.5em] {\ref{grouplegend}};
+    %\draw (plots c2r1.north west) circle (3pt) node {North west};
 
-\begin{tikzpicture}
-	\begin{semilogyaxis}[
-		xlabel=Number of negative samples,
-		ylabel=Time per positive image,
-		legend style={at={(0.465,-0.45)},
-         anchor=north,legend columns=-1},
-		]%legend pos=outer south]
-%% Poly SLEM
-	\addplot[PolySLEM] coordinates {
-		(500,  0.0001)
-		(1500, 0.0007)
-		(2500, 0.0023)
-		(3500, 0.0046)
-		(4500, 0.0088)
-		(5500, 0.0146)
-		(6500, 0.0213)
-		(7500, 0.0289)
-		(8500, 0.0395)
-		(9500, 0.0542)
-		(10500,0.0703)
-		(11500,0.0903)
-		(12500,0.1103)
-		(13500,0.1434)
-		(14500,0.1745)
-	};
-	\addlegendentry{Poly SLEM}
-%% Gaussian SLEM
-	\addplot[GaussSLEM] coordinates {
-		(500,  0.0003)
-		(1500, 0.0008)
-		(2500, 0.0021)
-		(3500, 0.0044)
-		(4500, 0.0072)
-		(5500, 0.0119)
-		(6500, 0.0172)
-		(7500, 0.026)
-		(8500, 0.0344)
-		(9500, 0.0465)
-		(10500,0.0617)
-		(11500,0.0814)
-		(12500,0.1248)
-		(13500,0.1301)
-		(14500,0.161)
-	};
-	\addlegendentry{Gaussian SLEM}
-%% ESVM
-	\addplot[ESVM] coordinates {
-		(500,  0.014)
-		(1500, 0.015)
-		(2500, 0.016)
-		(3500, 0.017)
-		(4500, 0.018)
-		(5500, 0.019)
-		(6500, 0.02)
-		(7500, 0.021)
-		(8500, 0.022)
-		(9500, 0.023)
-		(10500,0.024)
-		(11500,0.025)
-		(12500,0.026)
-		(13500,0.027)
-		(14500,0.028)
-	};
-	\addlegendentry{ESVM}
-%% Linear SLEM
-    \addplot[LinSLEM] coordinates {
-		(500,  0.0000565)
-		(1500, 0.0000575)
-		(2500, 0.0000467)
-		(3500, 0.0000679)
-		(4500, 0.0000683)
-		(5500, 0.0000612)
-		(6500, 0.0000608)
-		(7500, 0.0000708)
-		(8500, 0.0000743)
-		(9500, 0.0000996)
-		(10500, 0.0000993)
-		(11500,0.0001073)
-		(12500,0.0001027)
-		(13500,0.000075)
-		(14500,0.0001141)
-	};
-	\addlegendentry{Linear SLEM}
-	\end{semilogyaxis}
-\end{tikzpicture}
-\caption{Results for INRIA Holidays, using SPoC features and different methods of SLEM (see legend).}
-\label{fullrank:results}
+  \end{tikzpicture}
+  \caption{Results for INRIA Holidays, using SPoC features and different methods of SLEM (see legend).}
+  \label{fullrank:results}
 \end{figure}
-% Local Variables:
-%%% TeX-master: "main_eccv"
-%%% End:
+
+
+% \begin{figure}
+%   \begin{tikzpicture}
+%     \begin{groupplot}
+%       [group style={%
+%         columns=3,
+%         group name=plots,
+%         xlabels at=edge bottom,
+%         y descriptions at=edge left,
+%       },
+%       ybar,
+%       ymin=0,
+%       ymax=27e3,
+%       enlarge x limits={abs=.5},
+%       width=0.35\textwidth,
+%       height=0.6\textwidth,
+%       scaled y ticks=base 10:-3,
+%       xticklabels from table={\first}{Criterion},
+%       x tick label style={rotate=90,anchor=east},
+%       xtick=data,
+%       ]
+
+%       \nextgroupplot[xlabel=item1,legend to name=grouplegend,ylabel=y-label]
+%       \pgfplotstableforeachcolumn\first\as\col{%
+%         \ifnum\pgfplotstablecol=0
+%         \else
+%         \edef\tmp{%
+%           \noexpand\addplot table [x expr=\noexpand\coordindex,y=\col] {\noexpand\first};
+%           \noexpand\addlegendentry {\col}%
+%         }%
+%         \tmp
+%         \fi
+%       }
+
+%       \nextgroupplot[xlabel=item2]
+%       \pgfplotstableforeachcolumn\second\as\col{%
+%         \ifnum\pgfplotstablecol=0 
+%         \else
+%         \edef\tmp{%
+%           \noexpand\addplot table [x expr=\noexpand\coordindex,y=\col] {\noexpand\second};
+%         }%
+%         \tmp
+%         \fi
+%       }
+
+%       \nextgroupplot[xlabel=item3]
+%       \pgfplotstableforeachcolumn\third\as\col{%
+%         \ifnum\pgfplotstablecol=0 
+%         \else
+%         \edef\tmp{%
+%           \noexpand\addplot table [x expr=\noexpand\coordindex,y=\col] {\noexpand\third};
+%         }%
+%         \tmp
+%         \fi
+%       }
+%     \end{groupplot}
+
+%     \node at (plots c2r1.north) [anchor=south, yshift=.6cm] {\ref{grouplegend}};
+%   \end{tikzpicture}
+% \end{figure}
+
+
+% \def\sideboxwidth{0.48\textwidth}
+% \def\centerboxwidth{0.02\textwidth}
+% \begin{figure}[!h]
+%   \begin{minipage}{\sideboxwidth}
+%     \begin{center}
+%       \begin{tikzpicture}
+% 	\begin{axis}[
+%           xlabel=Num. of negatives,
+%           ylabel=mAP]
+%           %% Poly SLEM
+%           \addplot[PolySLEM] coordinates {
+%             (500,  0.78852)
+%             (1500, 0.80397)
+%             (2500, 0.80648)
+%             (3500, 0.80905)
+%             (4500, 0.81192)
+%             (5500, 0.81502)
+%             (6500, 0.81659)
+%             (7500, 0.81712)
+%             (8500, 0.81599)
+%             (9500, 0.81432)
+%             (10500,0.81625)
+%             (11500,0.81796)
+%             (12500,0.81726)
+%             (13500,0.81993)
+%             (14500,0.82057)
+%           };
+%           %% Gaussian SLEM
+%           \addplot[GaussSLEM] coordinates {
+%             (500,  0.77757)
+%             (1500, 0.79756)
+%             (2500, 0.80338)
+%             (3500, 0.79909)
+%             (4500, 0.79950)
+%             (5500, 0.80257)
+%             (6500, 0.8016)
+%             (7500, 0.80362)
+%             (8500, 0.80377)
+%             (9500, 0.80501)
+%             (10500,0.80534)
+%             (11500,0.80909)
+%             (12500,0.80955)
+%             (13500,0.80813)
+%             (14500,0.81214)
+%           };
+%           %% ESVM
+%           \addplot[ESVM] coordinates {
+%             (500,  0.7684)
+%             (1500, 0.78434)
+%             (2500, 0.78836)
+%             (3500, 0.78927)
+%             (4500, 0.79292)
+%             (5500, 0.79523)
+%             (6500, 0.79491)
+%             (7500, 0.79557)
+%             (8500, 0.79915)
+%             (9500, 0.79819)
+%             (10500,0.79888)
+%             (11500,0.7985)
+%             (12500,0.79822)
+%             (13500,0.79930)
+%             (14500,0.79905)
+%           };
+%           %% Linear SLEM
+%           \addplot[LinSLEM] coordinates {
+%             (500,  0.77638)
+%             (1500, 0.7748)
+%             (2500, 0.77919)
+%             (3500, 0.77914)
+%             (4500, 0.7748)
+%             (5500, 0.77578)
+%             (6500, 0.77902)
+%             (7500, 0.78338)
+%             (8500, 0.78043)
+%             (9500, 0.78026)
+%             (10500,0.77803)
+%             (11500,0.77767)
+%             (12500,0.77818)
+%             (13500,0.78148)
+%             (14500,0.78254)
+%           };
+% 	\end{axis}
+%       \end{tikzpicture}
+%     \end{center}
+%   \end{minipage}%
+%   \begin{minipage}{\centerboxwidth}~\end{minipage}%
+%   \begin{minipage}{\sideboxwidth}
+%     \begin{center}
+%       \begin{tikzpicture}
+% 	\begin{semilogyaxis}[
+%           xlabel=Num. of negatives,
+%           ylabel=Time per image (s),
+%           legend style={at={(0.465,-0.45)},
+%             anchor=north,legend columns=-1},
+%           ]%legend pos=outer south]
+%           %% Poly SLEM
+%           \addplot[PolySLEM] coordinates {
+%             (500,  0.0001)
+%             (1500, 0.0007)
+%             (2500, 0.0023)
+%             (3500, 0.0046)
+%             (4500, 0.0088)
+%             (5500, 0.0146)
+%             (6500, 0.0213)
+%             (7500, 0.0289)
+%             (8500, 0.0395)
+%             (9500, 0.0542)
+%             (10500,0.0703)
+%             (11500,0.0903)
+%             (12500,0.1103)
+%             (13500,0.1434)
+%             (14500,0.1745)
+%           };
+%           \addlegendentry{Poly SLEM}
+%           %% Gaussian SLEM
+%           \addplot[GaussSLEM] coordinates {
+%             (500,  0.0003)
+%             (1500, 0.0008)
+%             (2500, 0.0021)
+%             (3500, 0.0044)
+%             (4500, 0.0072)
+%             (5500, 0.0119)
+%             (6500, 0.0172)
+%             (7500, 0.026)
+%             (8500, 0.0344)
+%             (9500, 0.0465)
+%             (10500,0.0617)
+%             (11500,0.0814)
+%             (12500,0.1248)
+%             (13500,0.1301)
+%             (14500,0.161)
+%           };
+%           \addlegendentry{Gaussian SLEM}
+%           %% ESVM
+%           \addplot[ESVM] coordinates {
+%             (500,  0.014)
+%             (1500, 0.015)
+%             (2500, 0.016)
+%             (3500, 0.017)
+%             (4500, 0.018)
+%             (5500, 0.019)
+%             (6500, 0.02)
+%             (7500, 0.021)
+%             (8500, 0.022)
+%             (9500, 0.023)
+%             (10500,0.024)
+%             (11500,0.025)
+%             (12500,0.026)
+%             (13500,0.027)
+%             (14500,0.028)
+%           };
+%           \addlegendentry{ESVM}
+%           %% Linear SLEM
+%           \addplot[LinSLEM] coordinates {
+%             (500,  0.0000565)
+%             (1500, 0.0000575)
+%             (2500, 0.0000467)
+%             (3500, 0.0000679)
+%             (4500, 0.0000683)
+%             (5500, 0.0000612)
+%             (6500, 0.0000608)
+%             (7500, 0.0000708)
+%             (8500, 0.0000743)
+%             (9500, 0.0000996)
+%             (10500, 0.0000993)
+%             (11500,0.0001073)
+%             (12500,0.0001027)
+%             (13500,0.000075)
+%             (14500,0.0001141)
+%           };
+%           \addlegendentry{Linear SLEM}
+% 	\end{semilogyaxis}
+%       \end{tikzpicture}
+%       \caption{Results for INRIA Holidays, using SPoC features and different methods of SLEM (see legend).}
+%       \label{fullrank:results}
+%     \end{center}
+%   \end{minipage}
+% \end{figure}
+
+%% Local Variables:
+%% TeX-master: "main_eccv"
+%% End:
