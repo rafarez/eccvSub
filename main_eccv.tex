@@ -48,7 +48,7 @@
 \mainmatter
 \def\ECCV16SubNumber{1390}  % Insert your submission number here
 
-\title{Kernel Square-Loss Exemplar Machines For Image Retrieval} % Replace with your title
+\title{Kernel Squared Loss Exemplar Machines For Image Retrieval} % Replace with your title
 
 \titlerunning{ECCV-16 submission ID \ECCV16SubNumber}
 
@@ -63,7 +63,7 @@
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
- In this paper, we propose an improvement to the Exemplar SVM (ESVM) feature encoding pipeline first proposed by Zepeda and P\'erez \cite{ZePe15}. We first show that, by replacing the hinge loss by the square-loss in the ESVM cost function, we obtain similar results on image retrieval in a fraction of the execution time. We call this method square loss exemplar machine, or SLEM. Secondly, we introduce a kernelized SLEM variant that, while likewise benefiting from reduced complexity relative to ESVM, further results in a performance advantage in image retrieval. Both SLEM variants exploit the fact that only the exemplar image changes in the training set, and hence most of the SLEM computational complexity can be incurred offline by exploiting the Woodbury matrix identity.  We further propose using a Cholesky low-rank approximation of the kernel matrix to further reduce SLEM complexity. Our experiments establish the performance and computational advantages of our methods using a large array of state-of-the-art base feature representations, and well-known image retrieval datasets.
+ In this paper, we propose an improvement to the Exemplar SVM (ESVM) feature encoding pipeline first proposed by Zepeda and P\'erez \cite{ZePe15}. We first show that, by replacing the hinge loss by the squared loss in the ESVM cost function, we obtain similar results on image retrieval in a fraction of the execution time. We call this method squared loss exemplar machine, or SLEM. Secondly, we introduce a kernelized SLEM variant that, while likewise benefiting from reduced complexity relative to ESVM, further results in a performance advantage in image retrieval. Both SLEM variants exploit the fact that only the exemplar image changes in the training set, and hence most of the SLEM computational complexity can be incurred offline by exploiting the Woodbury matrix identity.  We further propose using a Cholesky low-rank approximation of the kernel matrix to further reduce SLEM complexity. Our experiments establish the performance and computational advantages of our methods using a large array of state-of-the-art base feature representations, and well-known image retrieval datasets.
 \end{abstract}
 
 \input{sec_intro.tex}
