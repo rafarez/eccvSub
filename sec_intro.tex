@@ -23,7 +23,9 @@ Since computing the SLEM feature requires inverting a large matrix related to th
 
 We further introduce a non-linear kernel variant of SLEM that enjoys even greater performance advantages. We demonstrate analytically that one can exploit the representer theorem to obtain a solution of the non-linear SLEM variant that uses the same closed-form solution used for linear SLEM. Hence, non-linear SLEM enjoys computational advantages comparable to those of linear SLEM, while benefitting from increased image retrieval performance, and we establish both of these points experimentally. In order to enjoy further computational benefits for the non-linear SLEM case, we also propose using a low-rank Cholesky approximation of the negative pool's  kernel matrix \cite{Bach}.
 
-The rest of this paper is organized as follows: In Section \ref{prior work} we provide an overview of various existing feature representation methods. We then introduce the proposed SLEM feature in Section \ref{lsesvm}, subsequently presenting the non-linear variant in Section \ref{nonlinear SLEM}. We then present the low-rank approximation of our method that enables efficient implementations in the non-linear case in  Section \ref{eff_imp}. We evaluate our proposed method in image retrieval in Section \ref{eval}, and present conclusions in Section \ref{conclusion}.
+The rest of this paper is organized as follows: 
+%In Section \ref{prior work} we provide an overview of various existing feature representation methods. 
+In Section \ref{lsesvm} we first review the original ESVM feature representation method and subsequently introduce the proposed linear SLEM methodd. We then introduce the non-linear SLEM variant in Section \ref{nonlinear SLEM}. We then present the low-rank approximation of our method that enables efficient implementations in the non-linear case in  Section \ref{eff_imp}. We evaluate our proposed method in image retrieval in Section \ref{eval}, and present conclusions in Section \ref{conclusion}.
 
 
 % Image search

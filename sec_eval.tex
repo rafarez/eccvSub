@@ -2,74 +2,91 @@
 \label{eval}
 
 \subsection{Datasets and evaluation protocol} \label{eval:protocol}
-Our main dataset for experiments is the INRIA \emph{Holidays} dataset \cite{holidays}. This dataset consists of 1491 images divided in 500 groups of matching images. If the dataset of an experiment is not mentioned in what follows this means, by default, that it is performed on \emph{Holidays}.
-We also use  the \emph{Oxford5k} dataset \cite{oxford}, which consists of 5062 images separated in 55 groups of matching images.
+\subsubsection{Holidays and Oxford5K.} We use two standard image retrieval datasets for our experiments. The first one is the INRIA \emph{Holidays} dataset \cite{holidays}. This dataset consists of 1491 images divided into 500 groups of matching images. %If the dataset of an experiment is not mentioned in what follows this means, by default, that it is performed on \emph{Holidays}.
+The second one is  the \emph{Oxford5k} dataset \cite{oxford}, which consists of 5062 images divided into 55 groups of matching images. 
 
-In both datasets, each group contains one query image, the other images in the group being the only correct answers to the query.
-For each query image, we calculate its similarity to all other images in the database and rank them, in decreasing order.
-The average precision of a group is derived from the ranking of the images of the group for the similarity with the corresponding query image.
-The final mean average precision (mAP) for a dataset is the mean of the average precision over all its groups.
-As pool of negative images to build E-SVM adn SLEM representations, we use the Flickr100k collection \cite{oxford}, composed of $10^5$ images from Flickr. For a full rank decomposition, we use only a subset of it, containing between 6000 and 15000 images.
+In both datasets, each group contains one query image, the other images in the group being the only correct answers to the query. We use the mAP computation procedures provided along with the dataset to evaluate performance.
+
+\subsubsection{Flickr $1e6$.} Besides these two datasets, we also use $1e6$ random distractor images downloaded from \emph{Flickr} to carry out large scale experiments, following standard protocol \cite{holidays,Delhumeau2013,ZePe15}.
+
+%For each query image, we calculate its similarity to all other images in the database and rank them, in decreasing order.
+%The average precision of a group is derived from the ranking of the images of the group for the similarity with the corresponding query image.
+%The final mean average precision (mAP) for a dataset is the mean of the average precision over all its groups.
+\subsubsection{Negative pool.} As a pool of negative images to build E-SVM and SLEM representations, we use the Flickr100k collection \cite{oxford}, composed of $10^5$ random Flickr images disjoint from those in Flickr $1e6$.. For a full rank decomposition, we use only a subset of it, containing between 6000 and 15000 images.
 As stated in section \ref{low-rank} and further discussed in section \ref{time-scale}, a full rank decomposition does not scale well for bigger number of negative samples. For low rank decomposition, we use all 100000 images.
 
-At evaluation time, for a dataset that consists of $p$ images and $q$ query images, we calculate its $p\times q$ \emph{similarity matrix} $S$, where each of its $q$ columns is the matching scores of the query image with all the $p$ images.
+%REMOVED
+%At evaluation time, for a dataset that consists of $p$ images and $q$ query images, we calculate its $p\times q$ \emph{similarity matrix} $S$, where each of its $q$ columns is the matching scores of the query image with all the $p$ images.
 
 
 \subsection{Which kernel to choose?}
-We tested three different kernels --linear, Gaussian and polynomial-- each with a scalar parameter $\gamma$:
+We tested three different kernels --linear, Gaussian, polynomial and Spatial Pyramid Matching (SPM) -- defined below:
 \begin{align}
     &k_{linear}(x,y) = x^Ty, \label{k:lin}\\
-    &k_{gauss}(x,y) = \exp(-\gamma\|x-y \|^2), \label{k:rbf}\\
-    &k_{poly}(x,y) = x^Ty+\gamma(x^Ty)^2. \label{k:poly}\\
-    %&k_{spp}(x,y) = \dfrac{1}{2^L}\mathcal{I}(H^0_x, H^0_y) +\sum_{l=1}^L\dfrac{1}{2^{L-l+1}}\mathcal{I}(H^{l,\gamma}_x, H^{l,\gamma}_y). \label{k:spm}
+    &k_{Gauss}(x,y) = \exp(-\gamma\|x-y \|^2), \label{k:rbf}\\
+    &k_{poly}(x,y) = x^Ty+\lambda(x^Ty)^2. \label{k:poly}\\
+    &k_{SPM}(x,y) = \dfrac{1}{2^L}\mathcal{I}(H^0_x, H^0_y) +\sum_{l=1}^L\dfrac{1}{2^{L-l+1}}\mathcal{I}(H^{l,\gamma}_x, H^{l,\gamma}_y). \label{k:spm}
 \end{align}
-\textbf{Linear SLEM} The linear kernel of Equation (\ref{k:lin}) is the first default choice and equivalent to the non-kernelized version of SLEM.
-In the remaining of this paper, we reference to linear SLEM when we use the non-kernelized SLEM.
-\textbf{Gaussian SLEM} The radial basis function kernel of Equation (\ref{k:rbf}) is a
-well known reproducing kernel, used for classification with support vector machines.
-\textbf{Polynomial SLEM} The polynomial kernel of Equation (\ref{k:poly}) is a reproducing kernel often used in natural language processing.
+%\JZ{We give results with spp, we should add it. Makes it clear that we use a wide range of kernels.}
+%\JZ{The text below could be removed. But some brief text for SPM is a good idea, as it is less standard. I think SPP and SPM are not the same thing... We should use SPM... SPP is a finite dimensional feature map.}
+% \textbf{Linear SLEM} The linear kernel of Equation (\ref{k:lin}) is the first default choice and equivalent to the non-kernelized version of SLEM.
+% In the remaining of this paper, we reference to linear SLEM when we use the non-kernelized SLEM.
+% \textbf{Gaussian SLEM} The radial basis function kernel of Equation (\ref{k:rbf}) is a
+% well known reproducing kernel, used for classification with support vector machines.
+% \textbf{Polynomial SLEM} The polynomial kernel of Equation (\ref{k:poly}) is a reproducing kernel often used in natural language processing.
 %\textbf{SPM SLEM} The spatial pyramid matching kernel of $L+1$ levels in Equation \ref{k:spm} take as input a set of local descriptors and its location in pyramidal bins \cite{spk}. 
+Note that Gaussian and polynomial kernels require a scalar parameter ($\gamma$ and $\lambda$, respectively), that we set using cross-validation \JZ{What is the cross-valid dataset?}.
+The SPM kernel of $L+1$ levels in Equation \eqref{k:spm} takes as input a set of local descriptors and computes a similarity score that takes into account their geometrical layout \cite{spk}.
+%its location in pyramidal bins \cite{spk}. 
 
 
 \subsection{Base visual features}
-We test our feature encoder for three different base features $x\in\mathbb{R}^d$, one hand-crafted image representation and two learned from deep convolutional neural networks.
+We test our feature encoder for three different base features $x\in\mathbb{R}^d$ the hand-crafted VLAD image representation \cite{Delhumeau2013} and two learned features derived from the activation coefficients of deep Convolutional Neural Networks \cite{Krizhevsky2012,babenko15}.
+
+We use the same VLAD variant of \cite{Delhumeau2013} used in \cite{ZePe15} that relies on densely-extracted rootSIFT \cite{3things} local descriptors, per-cluster, PCA-based rotations, and root normalization. Like \cite{ZePe15}, we use $64$ clusters, for a final feature size of $8192$.
+
+The first CNN-based feature we use consists of the activation coefficients of the previous-to-last layer of the architecture of \cite{Krizhevsky2012}, based on a publicly available pre-trained model \cite{jia2014caffe}. This is the same feature considered in \cite{ZePe15}.
+
+The second CNN-based feature, the SPoC feature of \cite{babenko15}, is tailored specifically for the image retrieval application. It consists of a spatially-weighted sum-pooling of the activations of the last convolutional layer of a 19-layer CNN \cite{Simonyan2014}.
+
+%REMOVED
+% We revisit the VLAD feature presented in \cite{VLAD} as an example of a hand-crafted representation. First we extract a set $\mathcal{F}$ of local descriptors of the image $I$. We use the 128 dimension RootSIFT \cite{3things} descriptors, extracted densely.
+% Then, we hard-assign each descriptor $f$ in $\mathcal{F}$ to the closest among $K$ pre-trained codewords $c_k$, $k\in\{1\cdots K\}$,
+% %one of $K$ set $\mathcal{C}_k$ of descriptors associated to codewords $\{c_k\}_{1\leq k\leq K}$, 
+% and map $f$ to a $\RR^{128K}$ vector
+% \begin{equation}
+% \phi^{VL}_1(f) = \left[0 \cdots 0\quad \Phi_k^T\frac{(f-c_k)}{\|f-c_k\|} \quad 0 \cdots 0\right],
+% \end{equation}
+% where $\Phi_k$ is a $128\times 128$ PCA matrix learned on training features mapped to $k$-the codeword.
+% %associated to descriptors in $\mathcal{C}_k$. 
+% The final VLAD representation is the power-normalization and $l_2$ normalization of the sum-pooling of $\phi^{VL}_1$:
+% \begin{equation}
+% \phi^{VL}_2(I) \propto \mathrm{power}\big(\sum_{f\in \mathcal{F}}\phi^{VL}_1(f)\big),~\|\phi^{VL}_2(I)\|=1,
+% \end{equation}
+% with scalar power normalization $\mathrm{power}(v)=\mathrm{sign}(v)|v|^{0.5}$ applied component-wise.
+% In experiments, we use $K=64$ codewords learned on images from Flickr. Our VLAD representation has $d=8192$ dimensions.
 
 
-We revisit the VLAD feature presented in \cite{VLAD} as an example of a hand-crafted representation. First we extract a set $\mathcal{F}$ of local descriptors of the image $I$. We use the 128 dimension RootSIFT \cite{3things} descriptors, extracted densely.
-Then, we hard-assign each descriptor $f$ in $\mathcal{F}$ to the closest among $K$ pre-trained codewords $c_k$, $k\in\{1\cdots K\}$,
-%one of $K$ set $\mathcal{C}_k$ of descriptors associated to codewords $\{c_k\}_{1\leq k\leq K}$, 
-and map $f$ to a $\RR^{128K}$ vector
-\begin{equation}
-\phi^{VL}_1(f) = \left[0 \cdots 0\quad \Phi_k^T\frac{(f-c_k)}{\|f-c_k\|} \quad 0 \cdots 0\right],
-\end{equation}
-where $\Phi_k$ is a $128\times 128$ PCA matrix learned on training features mapped to $k$-the codeword.
-%associated to descriptors in $\mathcal{C}_k$. 
-The final VLAD representation is the power-normalization and $l_2$ normalization of the sum-pooling of $\phi^{VL}_1$:
-\begin{equation}
-\phi^{VL}_2(I) \propto \mathrm{power}\big(\sum_{f\in \mathcal{F}}\phi^{VL}_1(f)\big),~\|\phi^{VL}_2(I)\|=1,
-\end{equation}
-with scalar power normalization $\mathrm{power}(v)=\mathrm{sign}(v)|v|^{0.5}$ applied component-wise.
-In experiments, we use $K=64$ codewords learned on images from Flickr. Our VLAD representation has $d=8192$ dimensions.
+%REMOVED
+% Convolutional features obtained from very deep convolutional neural networks (CNNs) have been shown to work as good local descriptors for matching \cite{SimonZisser15}. The SPoC representation \cite{babenko15} is a weighted sum-pooling of the activations of the last convolutional layer of a 19-layer CNN. For a given input image $I$, the activations in this layer are organized over a $W\times H$ spatial grid and over $d$ channels. Each position $(w,h)\in \{1 \cdots W\}\times \{1\cdots H\}$ can thus be equipped with a descriptor $f_{h,w}(I)\in\RR^D$.
+% %Indeed, if our last convolutional layer has $D$ neurons, and each neuron a $W\times H$ map of activations of this neurons to the image $I$, 
+% %each pair $(w,h)$ with $w$ in $\{1,2,..., W\}$ and $h$ in $\{1,2,...,H\}$ can be associated to a descriptor $f_{(h,w)}$ in $\RR^D$ of the responses of each neuron at coordinate $(w,h)$ of the maps. 
+% We then sum-pool these descriptors, weighted accordingly to their distance to the center of the image:
+% \begin{equation}
+%     \phi^{SPoC}(I) = \sum_{w=1}^W\sum_{h=1}^H \alpha_{w,h}f_{w,h}(I),
+% \end{equation}
+% where
+% \begin{equation}
+%     \alpha_{w,h} = \exp \left(-\dfrac{(w-W/2)^2+(h-H/2)^2}{2\sigma^2}\right).
+% \end{equation}
+% In our experiments, we follow the implementation details of \cite{babenko15}: We resize all images to $586\times 586$ pixels before feeding them to the network. The last convolutional layer has $d=512$ channels with activation maps of size $(W,H)=(37,37)$. We also set $\sigma=\frac{H}{3}$.
 
-Convolutional features obtained from very deep convolutional neural networks (CNNs) have been shown to work as good local descriptors for matching \cite{SimonZisser15}. The SPoC representation \cite{babenko15} is a weighted sum-pooling of the activations of the last convolutional layer of a 19-layer CNN. For a given input image $I$, the activations in this layer are organized over a $W\times H$ spatial grid and over $d$ channels. Each position $(w,h)\in \{1 \cdots W\}\times \{1\cdots H\}$ can thus be equipped with a descriptor $f_{h,w}(I)\in\RR^D$.
-%Indeed, if our last convolutional layer has $D$ neurons, and each neuron a $W\times H$ map of activations of this neurons to the image $I$, 
-%each pair $(w,h)$ with $w$ in $\{1,2,..., W\}$ and $h$ in $\{1,2,...,H\}$ can be associated to a descriptor $f_{(h,w)}$ in $\RR^D$ of the responses of each neuron at coordinate $(w,h)$ of the maps. 
-We then sum-pool these descriptors, weighted accordingly to their distance to the center of the image:
-\begin{equation}
-    \phi^{SPoC}(I) = \sum_{w=1}^W\sum_{h=1}^H \alpha_{w,h}f_{w,h}(I),
-\end{equation}
-where
-\begin{equation}
-    \alpha_{w,h} = \exp \left(-\dfrac{(w-W/2)^2+(h-H/2)^2}{2\sigma^2}\right).
-\end{equation}
-In our experiments, we follow the implementation details of \cite{babenko15}: We resize all images to $586\times 586$ pixels before feeding them to the network. The last convolutional layer has $d=512$ channels with activation maps of size $(W,H)=(37,37)$. We also set $\sigma=\frac{H}{3}$.
-
-Finally, we also test a more convencional CNN feature, less deep and using two fully connected layers after the convolutional layers.
-Our final representation is a $4096$ non-negative feature. We based out implementation on CAFFE \cite{jia2014caffe}.
+% Finally, we also test a more convencional CNN feature, less deep and using two fully connected layers after the convolutional layers.
+% Our final representation is a $4096$ non-negative feature. We based out implementation on CAFFE \cite{jia2014caffe}.
 
 
-\subsection{Implementation details}
-We cross validate $\gamma$ and $\lambda$ for Poly and Gaussian SLEM.
+% \subsection{Implementation details}
+% We cross validate $\gamma$ and $\lambda$ for Poly and Gaussian SLEM.
 
 \subsection{Full rank results}
 
