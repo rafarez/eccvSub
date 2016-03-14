@@ -107,13 +107,16 @@ Note that our method succeeds in improving the performance of the base feature f
 
 \begin{table*}[t]
 \begin{center}
-\caption{Mean average precision results for INRIA Holidays and Oxford buildings datasets, expressed as percentages. In this table, we present our results for VLAD-64 \cite{Delhumeau2013}, sum-pooling of convolutional features (SPoC) \cite{babenko15} and fully connected (fc) CNN \cite{jia2014caffe}}
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-Dataset & \multicolumn{3}{|c|}{\textbf{Holidays}} & \multicolumn{3}{|c|}{\textbf{Oxford 5k}}\\
-\hline
-Method, features & VLAD-64  & SPoC CNN & FC CNN & VLAD-64 & SPoC CNN & FC CNN\\
-\hline\hline
+\caption{Mean average precision results for INRIA Holidays and Oxford buildings datasets, expressed as percentages. In this table, we present our results for VLAD \cite{Delhumeau2013}, sum-pooling of convolutional features (SPoC CNN) \cite{babenko15},  and activation coefficients form the previous-to-last CNN layer (FC CNN) of the architecture in \cite{Krizhevsky2012}}
+\setlength{\tabcolsep}{.2em}
+%\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\small
+\begin{tabular}{c@{\hskip 2em}ccc@{\hskip 2em}cccc}
+\toprule
+Dataset & \multicolumn{3}{c}{\textbf{Holidays}} & \multicolumn{3}{c}{\textbf{Oxford 5k}}\\
+\midrule
+Method, features & VLAD  & SPoC CNN & FC CNN & VLAD & SPoC CNN & FC CNN\\
+\midrule
 Base feature            & 72.7         & 73.1         & 68.2         & 46.3           & 54.4         & 40.6\\
 %Whitening           & -    & -    & -    & -    & -\\
 PCA+whitening       & 69.4         & 77.5         & 69.2         & 50.9           & 63.7         & 45 \\
@@ -121,7 +124,7 @@ E-SVM               & \textbf{77.5} & 79.9         & 71.8         & 57.5        
 Linear SLEM         & 78           & 78.3         & 72.1         & \textbf{59.3}   & 64.1         & 45.5\\
 Gaussian SLEM       & 78.1         & 81.4         & \textbf{72.9} & 59             & \textbf{64.9} & 46.1\\
 Poly SLEM           & 78.1         & \textbf{82}   & \textbf{72.9} & \textbf{59.3}  & 64.8         & 46\\
-\hline
+\bottomrule
 \end{tabular}
 \end{center}
 \label{fullrank:results}
@@ -166,20 +169,21 @@ Note that linear SLEM enjoys a considerable computational advantage of close to 
 
 \subsection{Spatial pyramid matching kernel}
 
-\begin{table}[!h]
+\begin{table}[!t]
     \centering
     \caption{Results for spatial pyramids kernel when compared with a Bag of Visual Words from the local descriptors \JZ{BoW to change to SPM} }
-    \begin{tabular}{|c|c|c|c|c|}
-    \hline
-    Dataset & \multicolumn{2}{|c|}{\textbf{Holidays}} & \multicolumn{2}{|c|}{\textbf{Oxford 5k}}\\
-    \hline
+    %\begin{tabular}{|c|c|c|c|c|}
+    \setlength{\tabcolsep}{.5em}
+    \begin{tabular}{ccccc}
+      \toprule
+    Dataset & \multicolumn{2}{c}{\textbf{Holidays}} & \multicolumn{2}{c}{\textbf{Oxford 5k}}\\
+      \midrule
         Method, feaures & RootSIFT & CNN & RootSIFT
         &CNN \\
-    \hline
-    \hline
+      \midrule
     Baseline (BoW) & 37.4 & 49.8 & 31.1 & 32.4 \\
-        SP SLEM    & 66.9 & 70.2 & 42.4 & 45 \\
-    \hline
+        SP SLEM    & \textbf{66.9} & \textbf{70.2} & \textbf{42.4} & \textbf{45} \\
+      \bottomrule
     \end{tabular}
     \label{tab:spk}
 \end{table}
