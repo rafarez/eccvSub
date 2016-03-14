@@ -1,10 +1,22 @@
-"Improving bag-of-features for large scale image search", Hervé Jégou, Matthijs Douze, Cordelia Schmid, IJCV 2010
-81.3 
+\section{Comparison with the state of the art}
 
-"Asymmetric Hamming Embedding", Mihir Jain, Hervé Jégou, Patrick Gros, ACM MM 2011
-81.9
-
-"To aggregate or not to aggregate: selective match kernels for image search", Giorgos Tolias, Yannis Avrithis and Hervé Jégou, ICCV 2013
-88
+\begin{table}[!h]
+    \centering
+    \caption{State of the art}
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    Dataset & dim &\textbf{Holidays} & \textbf{Oxford 5k} & \textbf{Oxford 105k}\\
+    \hline
+    \hline
+    SPoC+GaussianSLEM                           & 1e3  &  81.4   &  64.9  &   -  \\
+    SPoC+PCA+PolySLEM                           & 1e3  &  82    &   64.5  &  62.3 \\
+    Babenko \textit{et al.} \cite{babenko15}    & 2e2  &  80.2  &   58.9  &  57.8 \\
+    J\'egou \textit{et al.} \cite{sota1}        & -    &  81.3  &    -    &   -   \\
+    Jain \textit{et al. } \cite{JaJeGro11}      &   -  &  81.9  &    -    &   -   \\
+    Tolias \textit{et al.} \cite{Tolias13}      & 1e7  &  88    &   82    &  75   \\
+    \hline
+    \end{tabular}
+    \label{tab:sota}
+\end{table}
 
 
