@@ -1,9 +1,10 @@
-\section{Square loss exemplar machine}\label{lsesvm}
-In this section, we revisit the exemplar SVM model as presented by \cite{Efros11} and introduce its square loss version.
+\section{Squared loss exemplar machine}\label{lsesvm}
+
+In this section, we revisit the exemplar SVM model as presented by \cite{Efros11} and introduce its squared loss version.
 \subsection{Exemplar SVMs} \label{esvm}
 Given base features in $\RR^d$ at training time, one positive example $x_0$ in $\RR^d$ and a set of negative examples $X = [x_1, x_2,...,x_n]$ in $\RR^{d\times n}$, each column of $X$ representing one example by a vector in $\RR^d$. 
 Any feature vector representation can be used.
-We are also given a loss function $l:\{-1, 1\}\times \RR\rightarrow\RR^+$. Learning an E-SVM from these examples amounts to minimizing the function 
+We are also given a loss function $l:\{-1, 1\}\times \RR\rightarrow\RR^+$. Learning an ESVM from these examples amounts to minimizing the function 
 \begin{equation}
 J(\omega, \nu) = \theta \ l(1, \omega^Tx_0+\nu) +\dfrac{1}{n}\sumi l(-1, \omega^T x_i+\nu)+\dfrac{\lambda}{2}\|\omega\|^2, \label{eq:first}
 \end{equation}
@@ -16,10 +17,10 @@ The  exemplar SVM of $x_0$ with respect to $X$ is the classifier $\omega^\star(x
 \end{equation}
 To shorten the notation, we refer to these solutions as $\omega^\star$ and $\nu^\star$ when their arguments are implicit.
 
-Applications of E-SVM use the hinge loss function, which guarantees that $J$ is a convex function. The solution of Equation (\ref{omega:first}) can be thus found by stochastic gradient descent.
+Applications of ESVM use the hinge loss function, which guarantees that $J$ is a convex function. The solution of Equation (\ref{omega:first}) can be thus found by stochastic gradient descent.
 
-\subsection{Square loss function}\label{SLEM}
-Now, let us study the same learning problem for the square-loss function $l(y,\hat{y}) = \frac{1}{2}(y-\hat{y})^2$. As for the hinge loss, Equation (\ref{eq:first}) is a convex problem. 
+\subsection{Squared loss function}\label{SLEM}
+Now, let us study the same learning problem for the squared loss function $l(y,\hat{y}) = \frac{1}{2}(y-\hat{y})^2$. As for the hinge loss, Equation (\ref{eq:first}) is a convex problem. 
 However, differently from the hinge loss, it is now a ridge regression problem, whose solution is expressed in a closed form:
 \begin{align}
 \begin{cases}
@@ -37,13 +38,13 @@ However, differently from the hinge loss, it is now a ridge regression problem, 
 where:
 \begin{align}
 &\mu = \frac{1}{n}\sum_{i=1}^n x_i,\\
-&U = \dfrac{1}{n}XX^T-\mu\mu^T+\dfrac{\theta}{\theta+1}(x_0-\mu)(x_0-\mu)^T+\lambda\textbf{Id}_d. \label{eq:U}
+&U = \dfrac{1}{n}XX^T-\mu\mu^T+\dfrac{\theta}{\theta+1}(x_0-\mu)(x_0-\mu)^T+\lambda\mathrm{Id}_d. \label{eq:U}
 \end{align}
 Equation \ref{omega:solution} shows how to solve (\ref{eq:first}) in a closed form to obtain the SLEM vector $\omega^\star(x_0,X)$ of $x_0$. 
-Replacing the hinge loss by the square loss offers a more compact solution, but not necessarily more efficient.
+Replacing the hinge loss by the squared loss offers a more compact solution, but not necessarily more efficient.
 
 \subsection{Woodbury identity and matching scores}
-Let us define $A = \frac{1}{n}XX^T-\mu\mu^T +\lambda\textbf{Id}_d$ and assume $A^{-1}$ known. 
+Let us define $A = \frac{1}{n}XX^T-\mu\mu^T +\lambda\mathrm{Id}_d$ and assume $A^{-1}$ known. 
 %$A$ is the covariance matrix of the negative samples $X$\footnote{added of a small term proportional to the identity matrix to insure $A$ is positive-definite.}. Let us assume its inverse $A^{-1}$ is known. 
 Matrix $U$ now reads $U = A + \frac{\theta}{\theta+1}\delta\delta^T$, where $\delta=x_0-\mu$. The Woodbury identity \cite{woodbury} gives us
 \begin{equation}
@@ -59,15 +60,15 @@ Using (\ref{invU}) in (\ref{omega:solution}) yields
 \end{split}
 \end{equation}
 
-The first observation we make from Equation (\ref{Wood:omega}) is that the positive sample weight $\theta$ does not influence the direction of the optimal vector $\omega^\star$, only its norm. This means that if search and ranking are based on the cosine-similarity, as in \cite{ZePe15}, $\theta$ does not influence the matching score of the SLEM vectors of two different images.
+The first observation we make from Equation (\ref{Wood:omega}) is that the positive sample weight $\theta$ does not influence the direction of the optimal vector $\omega^\star$, only its norm. This means that if search and ranking are based on the \textit{cosine similarity}, as in \cite{ZePe15}, $\theta$ does not influence the matching score of the SLEM vectors of two different images.
 Indeed, if $\omega$ and $\omega'$ are the $d$-dimensional SLEM vectors of $x$ and $x'$, respectively, their cosine similarity reads:
 %we can denote $s$ the matching score scalar function defined in $\RR^d\times \RR^d$, which is given by
 \begin{equation}
 s(\omega, \omega') = \dfrac{\omega^T \omega'}{\|\omega\| \|\omega'\|} = \frac{(x-\mu)^TA^{-2}(x'-\mu)}{\|A^{-1}(x-\mu)\|\|A^{-1}(x'-\mu)\|},\label{match:score}
 \end{equation}
-which does not depend on the value of $\theta$. This means that the weight of the positive sample can be fixed at any positive value without changing matching scores. This sets the SLEM appart from E-SVM that requires this parameter to be cross validated \cite{Efros11,ZePe15}.
+which does not depend on the value of $\theta$. This means that the weight of the positive sample can be fixed at any positive value without changing matching scores. This sets the SLEM apart from ESVM that requires this parameter to be cross validated \cite{Efros11,ZePe15}.
 
-\RAF{I cut the LDA and SLEM section, too long and but particularly useful}
+%\RAF{I cut the LDA and SLEM section, too long and but particularly useful}
 %\subsection{LDA and SLEM}
 
 %Let us now reanalyse the SLEM problem and suppose that we have multiple positive samples. It can be shown that in this case, the corresponding linear classifier of Equation (\ref{eq:first}) for the square-loss is also given by

@@ -1,5 +1,5 @@
-
 \section{Efficient implementation}\label{eff_imp}
+
 When compared with the problem of (\ref{omega:first}), one drawback of a kernelized approach of (\ref{ker:first}) is that the dimension of our problem grows with the size $n$ of the negative samples.
 We can compute the Cholesky factor $B$ of $K$ in $O(nr^2)$ time and $O(nr)$ storage, as will be shown in subsection~\ref{low-rank}. 
 For each positive exemplar, solving Equation (\ref{beta:final}) amounts to computing $B'$ from Lemma 1, and solving a linear system in $U$, which is a $(r+1)\times (r+1)$ matrix. The first of these is calculated in time $O(nr)$ and the second, $O(r^3)$.
@@ -10,7 +10,7 @@ Two ideas allow us to solve the kernelized problem linearly in $n$: low-rank dec
 In this section we start by revisiting the Cholesky algorithm of the construction of $B$, as presented in ~\cite{BaJo05,FiSc01}. 
 We denote, for any list of indexes $M$, $N$ in $\{1,2,...,n\}$, $K(M,N)$ the submatrix of $K$ composed of the rows indexed by $M$ and columns indexed by $N$ and $K(M,:)$ the submatrix of $K$ composed by rows indexed by $M$ and all columns.
 Let us assume a sequence of indexes $I_r=\{i_1,i_2,\dots ,i_r\}$ from $\{1,2,\dots, n\}$ is known. 
-We also denote, for $t$ in $\{1,2,...,r\}$, $I_t=\{i_1,...,i_t\}$ the subset of the $t$ first indexes of $I_r$ and $J_t=\{1,2,...,n\}/ I_t$ the complement of the $t$ first indexes.
+We also denote, for $t$ in $\{1,2,...,r\}$, $I_t=\{i_1,...,i_t\}$ the subset of the $t$ first indexes of $I_r$ and $J_t=\{1,2,...,n\} \setminus I_t$ the complement of the $t$ first indexes.
 $I_r$ is the set of pivots, chosen greedily such that $i_t$ minimizes the error approximation between $B_tB_t^T$ and $K$, where $B_t=B(I_t,:)$. 
 
 Given $I_t$, we can calculate the $t$-th column, $t=1,2,...,r$, of $B$ iteratively:
@@ -62,7 +62,7 @@ The proof of this lemma is similar to the previous lemma's proof, only adding th
 %Algorithm (\ref{icd:algo}) is such that the rank of $B_{r'}$ is $r'$, for all $r'<r$.
 %\end{proof}
 \subsection{Woodbury identity}
-Let us call $A=\frac{1}{n}QQ^T-\mu'\mu'^T+\lambda\textbf{Id}_{r+1}$, where $Q$ and $\mu'$ are defined at the end of \S \ref{subsec:adding}. We assume its inverse $A^{-1}$ known. From the kernalized version of (\ref{omega:solution}), we know that $U=A+\frac{\theta}{\theta+1}\delta\delta^T$, with $\delta=b_0'-\mu'$. The Woodbury identity gives us 
+Let us call $A=\frac{1}{n}QQ^T-\mu'\mu'^T+\lambda\textbf{Id}_{r+1}$, where $Q$ and $\mu'$ are defined at the end of Section \ref{subsec:adding}. We assume its inverse $A^{-1}$ known. From the kernalized version of (\ref{omega:solution}), we know that $U=A+\frac{\theta}{\theta+1}\delta\delta^T$, with $\delta=b_0'-\mu'$. The Woodbury identity gives us 
 \begin{equation}
 U^{-1}=A^{-1} -\dfrac{\theta}{\theta\delta^TA^{-1}\delta+ \theta+1}A^{-1}\delta^T\delta A^{-1}.\label{wood1}
 \end{equation}
@@ -73,7 +73,7 @@ Replacing (\ref{wood1}) in the original equation yields the solution
 which depends only $A^{-1}$, $\theta$, $\mu'$ and $b_0'$. 
 We can thus solve only one linear system with matrix $A$ for \textit{all} positives, instead of one in $U$ for \textit{each} positive.
 
-If we decompose $K$ at rank $r$, $A$ is constant for all positives, since $Q = [0, B]$ and $\mu'=[0; \mu]$.\footnote{Here, $\mu$ is the center of mass of the rows of $B$, not the columns of $X$ as initially presented in section \ref{lsesvm}.} 
+If we decompose $K$ at rank $r$, $A$ is constant for all positives, since $Q = [0, B]$ and $\mu'=[0; \mu]$.\footnote{Here, $\mu$ is the center of mass of the rows of $B$, not the columns of $X$ as initially presented in Section \ref{lsesvm}.} 
 But for a low-rank decomposition, we have instead $Q=[w, B_{r'}]$ and $\mu' = [\bar{w}; \mu]$. If so, $A$ is written as 
 \begin{equation}
 A = \begin{bmatrix}
