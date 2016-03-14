@@ -1,22 +1,30 @@
-\section{Comparison with the state of the art}
+\subsection{Comparison with the state of the art}
 \label{sec:sota}
-\begin{table}[!h]
-    \centering
-    \caption{State of the art}
-    \begin{tabular}{|c|c|c|c|c|}
-    \hline
+\begin{table}[!t]
+  \centering
+  \caption{Comparison to state-of-the-art.}
+  \label{tbl:sota}
+  %\begin{tabular}{|c|c|c|c|c|}
+  \setlength{\tabcolsep}{.5em}
+  \begin{tabular}{ccccc}
+    \toprule
     Dataset & dim &\textbf{Holidays} & \textbf{Oxford 5k} & \textbf{Oxford 105k}\\
-    \hline
-    \hline
-    SPoC+GaussianSLEM                           & 1e3  &  81.4   &  64.9  &   -  \\
-    SPoC+PCA+PolySLEM                           & 1e3  &  82    &   64.5  &  62.3 \\
-    Babenko \textit{et al.} \cite{babenko15}    & 2e2  &  80.2  &   58.9  &  57.8 \\
-    J\'egou \textit{et al.} \cite{sota1}        & -    &  81.3  &    -    &   -   \\
-    Jain \textit{et al. } \cite{JaJeGro11}      &   -  &  81.9  &    -    &   -   \\
-    Tolias \textit{et al.} \cite{Tolias13}      & 1e7  &  88    &   82    &  75   \\
-    \hline
-    \end{tabular}
-    \label{tab:sota}
+    \midrule
+    SPoC+GaussianSLEM                           & 1e3  &  81.4           &  \textbf{64.9}  &   -  \\
+    SPoC+PCA+PolySLEM                           & 1e3  &  \textbf{82}    &   64.5  &  \textbf{62.3} \\
+    Babenko \textit{et al.} \cite{babenko15}     & 2e2  &  80.2           &   58.9  &  57.8 \\
+    J\'egou \textit{et al.} \cite{sota1}         & -    &  81.3           &    -    &   -   \\
+    Jain \textit{et al. } \cite{JaJeGro11}       &   -  &  81.9           &    -    &   -   \\
+    \midrule
+    Tolias \textit{et al.} \cite{Tolias13}      & 1e7  &  \textbf{88}     &  \textbf{82}    &  \textbf{75}   \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:sota}
 \end{table}
 
+In Table \ref{tbl:sota} we compare our proposed SLEM architectures to various state-of-the-art methods. Note that our method outperforms all methods except the very-high dimensional method of Toilas \textit{et al.} \cite{Tolias13} which uses features of size $1e7$.
 
+
+%% Local Variables:
+%% TeX-master: "main_eccv"
+%% End:
