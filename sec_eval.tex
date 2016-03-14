@@ -1,6 +1,10 @@
 \section{Experimental Evaluation}
 \label{eval}
 
+%% Low-rank, mAP vs. r', n=50e3
+%% Temps, 
+%% Spatial Pyramid.
+
 \subsection{Datasets and evaluation protocol} \label{eval:protocol}
 \subsubsection{Holidays and Oxford5K.} We use two standard image retrieval datasets for our experiments. The first one is the INRIA \emph{Holidays} dataset \cite{holidays}. This dataset consists of 1491 images divided into 500 groups of matching images. %If the dataset of an experiment is not mentioned in what follows this means, by default, that it is performed on \emph{Holidays}.
 The second one is  the \emph{Oxford5k} dataset \cite{oxford}, which consists of 5062 images divided into 55 groups of matching images. 
@@ -89,12 +93,14 @@ The second CNN-based feature, the SPoC feature of \cite{babenko15}, is tailored 
 % We cross validate $\gamma$ and $\lambda$ for Poly and Gaussian SLEM.
 
 \subsection{Full rank results}
-In Table \ref{fullrank:results}, we test our method using tye three recent base features discussed above (VLAD \cite{Delhumeau2013}, SPoC \cite{babenko15}, and FC-CNN \cite{Sharif}). We further compare against the ESVM method of \cite{ZePe15}, as well as the PCA+whitening strategy shown in \cite{babenko15} to drastically improve the retrieval results for SPoC. In our experiments, using PCA dimensionality reduction worsens the results, and hence we use the full PCA projection matrix for the PCA+whitening strategy.
+In Table \ref{fullrank:results}, we test our method using the three recent base features discussed above (VLAD \cite{Delhumeau2013}, SPoC \cite{babenko15}, and FC-CNN \cite{Sharif}) and two datasets (6 combinations in total). We further compare against two feature enhancement strategies: {\it ( i)} the ESVM method of \cite{ZePe15}, as well as {\it ( ii)} the PCA+whitening strategy shown in \cite{babenko15} to drastically improve the retrieval results for SPoC. In our experiments, using PCA dimensionality reduction worsens the results, and hence we use the full PCA projection matrix for the PCA+whitening strategy.
 %Hence we compare the improvements of PCA plus whitening, without compression, with our method.
 
-Linear SLEM performs similarly to ESVM despite being much more time efficient (see discussion in section \ref{time-scale}).
-Gaussian SLEM and Polynomial SLEM outperform all methods, for all datasets and all image representations.
-The results are presented in Table \ref{fullrank:results}.
+Note that our method succeeds in improving the performance of the base feature for all three features tested and on both Holidays and Oxford 5K datasets. It further outperformns both ESVM and PCA+whiteninng feature enhancement strategies in 5 out of 6 cases, by as many as 2.8 mAP points (for SPoC CNN on Oxford 5K). Although nonlinear SLEM enjoys the highest performance, linear SLEM nonetheless outperforms both feature enhancement methods in 4 out of 6 cases illustrated in the table.
+
+%Linear SLEM performs similarly to ESVM despite being much more time efficient (see discussion in section \ref{time-scale}).
+%Gaussian SLEM and Polynomial SLEM outperform all methods, for all datasets and all image representations.
+%The results are presented in Table \ref{fullrank:results}.
 
 \begin{table*}[t]
 \begin{center}
@@ -105,10 +111,10 @@ Dataset & \multicolumn{3}{|c|}{\textbf{Holidays}} & \multicolumn{3}{|c|}{\textbf
 \hline
 Method, features & VLAD-64  & SPoC CNN & FC CNN & VLAD-64 & SPoC CNN & FC CNN\\
 \hline\hline
-Baseline            & 72.7         & 73.1         & 68.2         & 46.3           & 54.4         & 40.6\\
+Base feature            & 72.7         & 73.1         & 68.2         & 46.3           & 54.4         & 40.6\\
 %Whitening           & -    & -    & -    & -    & -\\
 PCA+whitening       & 69.4         & 77.5         & 69.2         & 50.9           & 63.7         & 45 \\
-E-SVM               & \textbf{78.3} & 79.9         & 71.8         & 57.5           & 62.1         & 44.6\\
+E-SVM               & \textbf{77.5} & 79.9         & 71.8         & 57.5           & 62.1         & 44.6\\
 Linear SLEM         & 78           & 78.3         & 72.1         & \textbf{59.3}   & 64.1         & 45.5\\
 Gaussian SLEM       & 78.1         & 81.4         & \textbf{72.9} & 59             & \textbf{64.9} & 46.1\\
 Poly SLEM           & 78.1         & \textbf{82}   & \textbf{72.9} & \textbf{59.3}  & 64.8         & 46\\
@@ -120,18 +126,26 @@ Poly SLEM           & 78.1         & \textbf{82}   & \textbf{72.9} & \textbf{59.
 
 \input{figuredistrac.tex}
 \subsection{Time Scalability} \label{time-scale}
-In this section we compare the time efficiency of our method and the E-SVM, as well as discuss which method to use accordingly with the number of positive and negative samples.
+In Figure \ref{fullrank:results} we evaluate the \textit{(left)} mAP performance and \textit{(right)} time efficiency of (non-)linear SLEM as a function of the negative pool size $n$, comparing it to ESVM. To compute mAP for ESVM, we use $T=10^5$ iterations for all values of $n$ to favour performance. Timings for ESVM are those reported in \cite{ZePe15}, but assuming $T=n 10/6$ (the factor of $10/6$ is used in \cite{ZePe15}).
 
-In Figure \ref{fullrank:results}, we see Linear SLEM efficiency does not change with $n$.
-Indeed, if $d$ is the dimension of the base representation, $A$ is a $d\times d$ matrix for Linear SLEM, whereas for a full rank kernel, $A$ is a $n\times n$.
-This explain the increasing running time for Gaussian and polynomial kernels: storage and solving a $n\times n$ system does not scale for large number of negative samples.
-But retrieval results in Figure \ref{fullrank:results} suggest we can benefit from larger sets of negative samples. Linear SLEM and ESVM scales well, but do not perform so well.
+For all features, we report only timings related to ESVM or SLEM feature extraction. For the case of ESVM or linear SLEM, this includes only the computation of the vector of weights $\omega^\star$. For nonlinear SLEM, this includes the computation of all components of Equation \eqref{eq:nl_sim} that involve the query vector $x_0$ (i.e., $\hat \beta, \beta_0, k(x_0, x_0^\prime), u$ and $v$). \JZ{This does depend on the size of the database... We should indicate what database size we are assuming...}
+
+Note that linear SLEM enjoys a considerable computational advantage of close to two orders of magnitude over ESVM, while under-performing by less than two mAP points. Non-linear SLEM, on the other hand uniformly outperforms ESVM in terms of mAP, but incurs a computational penalty for higher negative pool sizes. The increased complexity for Gaussian and polynomial kernels is expected: storing and solving a $n\times n$ system does not scale for large number of negative samples $n$.
+
+%In this section we compare the time efficiency of our method to that of E-SVM,  as discuss which method to use accordingly with the number of positive and negative samples.
+
+%REMOVED this bc now it does change with n...
+%In Figure \ref{fullrank:results}, we see that Linear SLEM efficiency does not change with $n$.
+%Indeed, if $d$ is the dimension of the base representation, $A$ is a $d\times d$ matrix for Linear SLEM, whereas for a full rank kernel, $A$ is a $n\times n$.
+
+The reason for the increased complexity for Gaussian and polynomial kernels follows since storing and solving a $n\times n$ system does not scale for large number of negative samples.
+%But retrieval results in Figure \ref{fullrank:results} suggest we can benefit from larger sets of negative samples. %Linear SLEM and ESVM scales well, but do not perform so well.
 
 \vspace{3 mm}
 
 \input{figuren.tex}
 
-\subsection{Low-rank decomposition evaluation}
+%\subsection{Low-rank decomposition evaluation}
 
 
 %\begin{figure}[!h]

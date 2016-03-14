@@ -121,13 +121,15 @@ h =\alpha_0 \varphi(x_0)+\sum_{i=1}^n \alpha_i \varphi (x_i)+\nu \in H.
 \end{equation}
 Inspired by the matching score of \cite{ZePe15}, the matching score $s(h,h')$ between $h$ and the encoding $h'=\alpha_0'\varphi(x_0')+\sum_{i=1}^n \alpha_i'\varphi (x_i)+\nu'$ of an other image $x_0'$, is given by (ignoring bias $\nu$ and $\nu'$ which have empirically no influence): 
 %\PP{So, biases $\nu$ and $\nu'$ are ignored?}\RAF{Yes, adding it to the classifier does not change the results in a significant way.} 
-\begin{equation}
-\begin{split}
+%\begin{equation}
+%\begin{split}
+\begin{align}
 s(h,h') & = \langle h, h'\rangle \\
 		& = \hat{\alpha}^{T} K\hat{\alpha}'+\alpha_0k(X, x_0)^T\hat{\alpha}'+\alpha_0'k(X, x_0')^T\hat{\alpha}+\alpha_0\alpha_0'k(x_0,x_0')\\
-		& = \hat{\beta}^T\hat{\beta}'+\frac{\beta_0\beta_0'}{uu'}(k(x_0,x_0')-v^Tv').
-\end{split}
-\end{equation}
+		& = \hat{\beta}^T\hat{\beta}'+\frac{\beta_0\beta_0'}{uu'}(k(x_0,x_0')-v^Tv'). \label{eq:nl_sim}
+\end{align}
+%\end{split}
+%\end{equation}
 
 
 
