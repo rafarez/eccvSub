@@ -130,7 +130,6 @@ Poly SLEM           & 78.1         & \textbf{82}   & \textbf{72.9} & \textbf{59.
 \label{fullrank:results}
 \end{table*}
 
-\input{figuredistrac.tex}
 \subsection{Time Scalability} \label{time-scale}
 In Figure \ref{fullrank:results} we evaluate the \textit{(left)} mAP performance and \textit{(right)} time efficiency of (non-)linear SLEM as a function of the negative pool size $n$, comparing it to ESVM. To compute mAP for ESVM, we use $T=10^5$ iterations for all values of $n$ to favour performance. Timings for ESVM are those reported in \cite{ZePe15}, but assuming $T=n 10/6$ (the factor of $10/6$ is used in \cite{ZePe15}).
 
@@ -197,6 +196,10 @@ For level $l$ in $\{0,1,..., L\}$, we divide the images in grids $2^l\times 2^l$
 The kernel $K_{sp}(X,Y)$ is given by sum over all codewords of the intersection histogram of $H^{(l,m)}_X$ and $H^{(l,m)}_Y$, $l=0,...,L$,  weighted proportionally to the number of bins in each level.
 
 We test this kernel for RootSIFT extracted in multiscales, as used in \cite{spk}, and learn the codewords with K-means. Inspired by the results of \cite{SPPCNN}, we also test it for activations of the last convolutional layer of the network of \cite{SimonZisser15}. Each neuron of the last layer correspont to a codeword. The results are presented in Table \ref{tab:spk}.
+
+\subsection{Large-scale experiments}
+\input{figuredistrac.tex}
+In Figure \ref{vlad:oxford} we evalute the performance of the SLEM feature in large-scale image search, by embedding the Holidays dataset within a large dataset of distractor images mined from Flickr, as per the standard large-scale evaluation protocol \cite{holidays,Delhumeau2013,ZePe15}. Given that the best base feature in \cite{ZePe15} is VLAD, we use this base feature in our evaluation although it results in comparable performance for non-linear and linear SLEM (see Table \ref{fullrank:results}). Note however that, for larger numbers of distractor images, the polynomial SLEM variant does give an advantage relative to linear SLEM. And overall, (non-)linear SLEM outperforms the order $2$ ESVM feature regardless of the number of distractor images by close to $2$ mAP points.
 
 %The spatial pyramid kernel is given by
 %\begin{align}
