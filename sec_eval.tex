@@ -11,13 +11,13 @@ The second one is  the \emph{Oxford5k} dataset \cite{oxford}, which consists of 
 
 In both datasets, each group contains one query image, the other images in the group being the only correct answers to the query. We use the mAP computation procedures provided along with the dataset to evaluate performance.
 
-\subsubsection{Flickr $1e6$.} Besides these two datasets, we also use $1e6$ random distractor images downloaded from \emph{Flickr} to carry out large scale experiments, following standard protocol \cite{holidays,Delhumeau2013,ZePe15}.
+\subsubsection{Flickr1M.} Besides these two datasets, we also use 1 million random distractor images downloaded from \emph{Flickr} to carry out large scale experiments, following standard protocol \cite{holidays,Delhumeau2013,ZePe15}.
 
 %For each query image, we calculate its similarity to all other images in the database and rank them, in decreasing order.
 %The average precision of a group is derived from the ranking of the images of the group for the similarity with the corresponding query image.
 %The final mean average precision (mAP) for a dataset is the mean of the average precision over all its groups.
-\subsubsection{Negative pool.} As a pool of negative images to build E-SVM and SLEM representations, we use the Flickr100k collection \cite{oxford}, composed of $10^5$ random Flickr images disjoint from those in Flickr $1e6$.. For a full rank decomposition, we use only a subset of it, containing between 6000 and 15000 images.
-As stated in section \ref{low-rank} and further discussed in section \ref{time-scale}, a full rank decomposition does not scale well for bigger number of negative samples. For low rank decomposition, we use all 100000 images.
+\subsubsection{Negative pool.} As a pool of negative images to build ESVM and SLEM representations, we use the Flickr100k collection \cite{oxford}, composed of $10^5$ random Flickr images disjoint from those in Flickr1M. For a full rank decomposition, we use only a subset of it, containing between 6000 and 15000 images.
+As stated in Section \ref{low-rank} and further discussed in Section \ref{time-scale}, a full rank decomposition does not scale well for bigger number of negative samples. For low rank decomposition, we use all 100000 images.
 
 %REMOVED
 %At evaluation time, for a dataset that consists of $p$ images and $q$ query images, we calculate its $p\times q$ \emph{similarity matrix} $S$, where each of its $q$ columns is the matching scores of the query image with all the $p$ images.
@@ -47,7 +47,7 @@ Besides the three kernels above described, we likewise carry out experiments usi
 
 
 \subsection{Base visual features}
-We test our feature encoder for three different base features $x\in\mathbb{R}^d$ the hand-crafted VLAD image representation \cite{Delhumeau2013} and two learned features derived from the activation coefficients of deep Convolutional Neural Networks \cite{Krizhevsky2012,babenko15}.
+We test our feature encoder for three different base features $x\in\mathbb{R}^d$: the hand-crafted VLAD image representation \cite{Delhumeau2013} and two learned features derived from the activation coefficients of deep Convolutional Neural Networks \cite{Krizhevsky2012,babenko15}.
 
 We use the same VLAD variant of \cite{Delhumeau2013} used in \cite{ZePe15} that relies on densely-extracted rootSIFT \cite{3things} local descriptors, per-cluster, PCA-based rotations, and root normalization. Like \cite{ZePe15}, we use $64$ clusters, for a final feature size of $8192$.
 
@@ -96,10 +96,10 @@ The second CNN-based feature, the SPoC feature of \cite{babenko15}, is tailored 
 
 %\subsection{Full rank results}
 \subsection{Comparison to other enhancement methods using various base features} \JZ{Renamed from ``Full rank results'', not too convinced myself... but if we don't have low-rank results...}
-In Table \ref{fullrank:results}, we test our method using the three recent base features discussed above (VLAD \cite{Delhumeau2013}, SPoC \cite{babenko15}, and FC-CNN \cite{Sharif}) and two datasets (6 combinations in total). We further compare against two feature enhancement strategies: {\it ( i)} the ESVM method of \cite{ZePe15}, as well as {\it ( ii)} the PCA+whitening strategy shown in \cite{babenko15} to drastically improve the retrieval results for SPoC. In our experiments, using PCA dimensionality reduction worsens the results, and hence we use the full PCA projection matrix for the PCA+whitening strategy.
+In Table \ref{fullrank:results}, we test our method using the three recent base features discussed above (VLAD \cite{Delhumeau2013}, SPoC \cite{babenko15}, and FC-CNN \cite{Sharif}) and two datasets (6 combinations in total). We further compare against two feature enhancement strategies: {\it (i)} the ESVM method of \cite{ZePe15}, as well as {\it (ii)} the PCA+whitening strategy shown in \cite{babenko15} to drastically improve the retrieval results for SPoC. In our experiments, using PCA dimensionality reduction worsens the results, and hence we use the full PCA rotation matrix for the PCA+whitening strategy.
 %Hence we compare the improvements of PCA plus whitening, without compression, with our method.
 
-Note that our method succeeds in improving the performance of the base feature for all three features tested and on both Holidays and Oxford 5K datasets. It further outperformns both ESVM and PCA+whiteninng feature enhancement strategies in 5 out of 6 cases, by as many as 2.8 mAP points (for SPoC CNN on Oxford 5K). Although nonlinear SLEM enjoys the highest performance, linear SLEM nonetheless outperforms both feature enhancement methods in 4 out of 6 cases illustrated in the table.
+Note that our method succeeds in improving the performance of the base feature for all three features tested and on both Holidays and Oxford5K datasets. It further outperformns both ESVM and PCA+whiteninng feature enhancement strategies in 5 out of 6 cases, by as many as 2.8 mAP points (for SPoC CNN on Oxford5K). Although nonlinear SLEM enjoys the highest performance, linear SLEM nonetheless outperforms both feature enhancement methods in 4 out of 6 cases illustrated in the table.
 
 %Linear SLEM performs similarly to ESVM despite being much more time efficient (see discussion in section \ref{time-scale}).
 %Gaussian SLEM and Polynomial SLEM outperform all methods, for all datasets and all image representations.
@@ -107,23 +107,23 @@ Note that our method succeeds in improving the performance of the base feature f
 
 \begin{table*}[t]
 \begin{center}
-\caption{Mean average precision results for INRIA Holidays and Oxford buildings datasets, expressed as percentages. In this table, we present our results for VLAD \cite{Delhumeau2013}, sum-pooling of convolutional features (SPoC CNN) \cite{babenko15},  and activation coefficients form the previous-to-last CNN layer (FC CNN) of the architecture in \cite{Krizhevsky2012}}
+\caption{Mean average precision results for INRIA Holidays and Oxford5k datasets, expressed as percentages. In this table, we present our results for VLAD \cite{Delhumeau2013}, sum-pooling of convolutional features (SPoC CNN) \cite{babenko15},  and activation coefficients form the previous-to-last CNN layer (FC CNN) of the architecture in \cite{Krizhevsky2012}}
 \setlength{\tabcolsep}{.2em}
 %\begin{tabular}{|c|c|c|c|c|c|c|c|}
 \small
 \begin{tabular}{c@{\hskip 2em}ccc@{\hskip 2em}cccc}
 \toprule
-Dataset & \multicolumn{3}{c}{\textbf{Holidays}} & \multicolumn{3}{c}{\textbf{Oxford 5k}}\\
+Dataset & \multicolumn{3}{c}{\textbf{Holidays}} & \multicolumn{3}{c}{\textbf{Oxford5k}}\\
 \midrule
 Method, features & VLAD  & SPoC CNN & FC CNN & VLAD & SPoC CNN & FC CNN\\
 \midrule
 Base feature            & 72.7         & 73.1         & 68.2         & 46.3           & 54.4         & 40.6\\
 %Whitening           & -    & -    & -    & -    & -\\
 PCA+whitening       & 69.4         & 77.5         & 69.2         & 50.9           & 63.7         & 45 \\
-E-SVM               & \textbf{77.5} & 79.9         & 71.8         & 57.5           & 62.1         & 44.6\\
-Linear SLEM         & 78           & 78.3         & 72.1         & \textbf{59.3}   & 64.1         & 45.5\\
-Gaussian SLEM       & 78.1         & 81.4         & \textbf{72.9} & 59             & \textbf{64.9} & 46.1\\
-Poly SLEM           & 78.1         & \textbf{82}   & \textbf{72.9} & \textbf{59.3}  & 64.8         & 46\\
+ESVM               & \textbf{77.5} & 79.9         & 71.8         & 57.5           & 62.1         & 44.6\\
+Linear SLEM         & 78.0           & 78.3         & 72.1         & \textbf{59.3}   & 64.1         & 45.5\\
+Gaussian SLEM       & 78.1         & 81.4         & \textbf{72.9} & 59.0            & \textbf{64.9} & 46.1\\
+Poly SLEM           & 78.1         & \textbf{82.0}   & \textbf{72.9} & \textbf{59.3}  & 64.8         & 46.0\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -131,11 +131,11 @@ Poly SLEM           & 78.1         & \textbf{82}   & \textbf{72.9} & \textbf{59.
 \end{table*}
 
 \subsection{Time Scalability} \label{time-scale}
-In Figure \ref{fullrank:results} we evaluate the \textit{(left)} mAP performance and \textit{(right)} time efficiency of (non-)linear SLEM as a function of the negative pool size $n$, comparing it to ESVM. To compute mAP for ESVM, we use $T=10^5$ iterations for all values of $n$ to favour performance. Timings for ESVM are those reported in \cite{ZePe15}, but assuming $T=n 10/6$ (the factor of $10/6$ is used in \cite{ZePe15}).
+In Figure \ref{fullrank:results} we evaluate \textit{(left)} mAP performance and \textit{(right)} time efficiency of (non-)linear SLEM as a function of the negative pool size $n$, comparing it to ESVM. To compute mAP for ESVM, we use $T=10^5$ iterations for all values of $n$ to favour performance. Timings for ESVM are those reported in \cite{ZePe15}, but assuming $T=n 10/6$ (the factor of $10/6$ is used in \cite{ZePe15}).
 
 For all features, we report only timings related to ESVM or SLEM feature extraction. For the case of ESVM or linear SLEM, this includes only the computation of the vector of weights $\omega^\star$. For nonlinear SLEM, this includes the computation of all components of Equation \eqref{eq:nl_sim} that involve the query vector $x_0$ (i.e., $\hat \beta, \beta_0, k(x_0, x_0^\prime), u$ and $v$). \JZ{This does depend on the size of the database... We should indicate what database size we are assuming...}
 
-Note that linear SLEM enjoys a considerable computational advantage of close to two orders of magnitude over ESVM, while under-performing by less than two mAP points. Non-linear SLEM, on the other hand uniformly outperforms ESVM in terms of mAP, but incurs a computational penalty for higher negative pool sizes. The increased complexity for Gaussian and polynomial kernels is expected: storing and solving a $n\times n$ system does not scale for large number of negative samples $n$.
+Note that linear SLEM enjoys a considerable computational advantage of close to two orders of magnitude over ESVM, while under-performing by less than two mAP points. Non-linear SLEM, on the other hand uniformly outperforms ESVM in terms of mAP, but incurs a computational penalty for higher negative pool sizes. The increased complexity for Gaussian and polynomial kernels is expected: storing and solving an $n\times n$ system does not scale for large number of negative samples $n$.
 
 %In this section we compare the time efficiency of our method to that of E-SVM,  as discuss which method to use accordingly with the number of positive and negative samples.
 
@@ -175,13 +175,13 @@ Note that linear SLEM enjoys a considerable computational advantage of close to 
     \setlength{\tabcolsep}{.5em}
     \begin{tabular}{ccccc}
       \toprule
-    Dataset & \multicolumn{2}{c}{\textbf{Holidays}} & \multicolumn{2}{c}{\textbf{Oxford 5k}}\\
+    Dataset & \multicolumn{2}{c}{\textbf{Holidays}} & \multicolumn{2}{c}{\textbf{Oxford5k}}\\
       \midrule
         Method, feaures & RootSIFT & CNN & RootSIFT
         &CNN \\
       \midrule
     Baseline (BoW) & 37.4 & 49.8 & 31.1 & 32.4 \\
-        SP SLEM    & \textbf{66.9} & \textbf{70.2} & \textbf{42.4} & \textbf{45} \\
+        SP SLEM    & \textbf{66.9} & \textbf{70.2} & \textbf{42.4} & \textbf{45.0} \\
       \bottomrule
     \end{tabular}
     \label{tab:spk}
@@ -191,11 +191,11 @@ All previous kernel functions take as input image representations in a fixed siz
 We revisit the spatial pyramid scheme presented in \cite{spk} using the generalized intersection function of histograms.
 
 Let $X$, $Y$ be the sets of local descriptors of a pair of images.
-These local descriptors can be associated to one of $M$ codewords $\{c_1,c_2,...,c_M\}$, so that $X=\bigcup_{1\leq m \leq M}X_m$ and $Y=\bigcup_{1\leq m \leq M}Y_m$, so that $X_m$, $Y_m$ are the set of descriptors associated to $c_m$.
-For level $l$ in $\{0,1,..., L\}$, we divide the images in grids $2^l\times 2^l$ and we call $H^{(l,m)}_X$, $H^{(l,m)}_Y$ the $4^l$-dimensional histograms of the occurrences of the of the visual word $c_m$ in each bin of the grid.
+These local descriptors can be associated to one of $M$ codewords $\{c_1,c_2,...,c_M\}$, so that $X=\bigcup_{1\leq m \leq M}X_m$ and $Y=\bigcup_{1\leq m \leq M}Y_m$, with $X_m$ and $Y_m$ the sets of descriptors associated to $c_m$.
+For level $l$ in $\{0,1,..., L\}$, we divide the images in grids $2^l\times 2^l$ and we call $H^{(l,m)}_X$, $H^{(l,m)}_Y$ the $4^l$-dimensional histograms of the occurrences of the visual word $c_m$ in each bin of the grid.
 The kernel $K_{sp}(X,Y)$ is given by sum over all codewords of the intersection histogram of $H^{(l,m)}_X$ and $H^{(l,m)}_Y$, $l=0,...,L$,  weighted proportionally to the number of bins in each level.
 
-We test this kernel for RootSIFT extracted in multiscales, as used in \cite{spk}, and learn the codewords with K-means. Inspired by the results of \cite{SPPCNN}, we also test it for activations of the last convolutional layer of the network of \cite{SimonZisser15}. Each neuron of the last layer correspont to a codeword. The results are presented in Table \ref{tab:spk}.
+We test this kernel for RootSIFT extracted in multiscales, as used in \cite{spk}, and learn the codewords with K-means. Inspired by the results of \cite{SPPCNN}, we also test it for activations of the last convolutional layer of the network of \cite{SimonZisser15}. Each neuron of the last layer corresponds to a codeword. The results are presented in Table \ref{tab:spk}.
 
 \subsection{Large-scale experiments}
 \input{figuredistrac.tex}
